@@ -2,90 +2,131 @@ import { useState, useEffect, useCallback } from "react";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────
 const DATA = {
-  name: "YOUR NAME",
-  title: "Full-Stack Developer",
-  rpgTitle: "FULL-STACK MAGE · .NET ARCHMAGE · REACT CONJURER",
-  location: "Philippines",
-  email: "you@email.com",
-  linkedin: "linkedin.com/in/yourhandle",
-  primaryStack: ".NET · React",   // shown in Classic sidebar career snapshot
+  name: "ERWIN TAYAG",
+  title: "Software Developer (.NET / C#)",
+  rpgTitle: ".NET ARCHMAGE",
+  location: "Capas, Tarlac, Philippines",
+  phone: "+63 921 541 9326",
+  email: "tayag.erwin.macale@gmail.com",
+  linkedin: "https://www.linkedin.com/in/tayag-erwin-macale/",
+  github: "https://github.com/erwintayag",
+  primaryStack: ".NET · C#",   // shown in Classic sidebar career snapshot
   tagline: "They said the stack was legacy. I made it legend.",
   taglineCV: "Enterprise-forged. Delivered at scale. Still shipping.",
-  rpgSummary: "A seasoned conjurer forged in the crucible of enterprise .NET and tempered by the reactive arts of modern frontend sorcery. Eight years of dungeon-clearing have sharpened both the blade of clean architecture and the arcane mastery of cloud infrastructure.",
+  rpgSummary: "Eleven years forged in the trenches of enterprise .NET — where legacy systems don't retire, they get rewritten. A seasoned arcanist who has bent SQL Server to his will, conjured stability from WebForms chaos, and automated the workflows that once consumed entire teams. Every dungeon cleared with C# in hand and production logs ablaze.",
   skillCategories: [
     {
       id: "backend", label: "Backend", rpgLabel: "Arcane Arts",
       color: "#00d4ff",
-      skills: ["C#", ".NET Core", ".NET Framework", "ASP.NET Core", "Blazor", "REST API", "SignalR", "Entity Framework", "LINQ", "Microservices"],
+      skills: ["C#", ".NET Framework", "ASP.NET WebForms", "ASP.NET MVC", "OWIN", "RESTful API Development", "Swagger / OpenAPI"],
     },
     {
       id: "frontend", label: "Frontend", rpgLabel: "Illusion Craft",
       color: "#b06aff",
-      skills: ["React", "JavaScript", "TypeScript", "HTML5", "CSS3", "Tailwind CSS", "Bootstrap", "jQuery", "Responsive Design"],
+      skills: ["HTML5", "CSS3", "JavaScript"],
     },
     {
       id: "database", label: "Database", rpgLabel: "Rune Storage",
       color: "#f4c542",
-      skills: ["SQL Server", "PostgreSQL", "T-SQL", "MySQL", "Redis", "Entity Framework Core", "Dapper"],
+      skills: ["SQL Server", "PostgreSQL", "Oracle", "Stored Procedures", "Query Optimization", "Data Modeling"],
     },
     {
       id: "tools", label: "Tools & Platforms", rpgLabel: "Relics & Artifacts",
       color: "#ff3356",
-      skills: ["Azure", "Git", "GitHub", "Azure DevOps", "Docker", "Postman", "Visual Studio", "VS Code", "IIS", "Swagger / OpenAPI"],
+      skills: ["Git", "GitHub", "Postman", "Power BI", "Jasper Reports", "amCharts"],
     },
     {
       id: "practices", label: "Dev Practices", rpgLabel: "Ancient Disciplines",
       color: "#5eead4",
-      skills: ["Agile / Scrum", "SDLC", "Legacy System Modernization", "Code Review", "CI/CD", "System Architecture", "API Design", "Technical Documentation"],
+      skills: ["Legacy System Modernization", "Business Process Automation", "SDLC / Agile Collaboration", "Production Support & Debugging"],
     },
   ],
   innateAbilities: [
-    { id: "solver",       label: "Problem Solver",    rpgLabel: "Dungeon Breaker",  color: "#00d4ff", skills: ["Root Cause Analysis", "Debugging", "Architecture Decisions", "Workaround Design", "Trade-off Evaluation", "Incident Response"] },
-    { id: "pragmatist",   label: "Pragmatist",         rpgLabel: "Iron Realist",     color: "#f4c542", skills: ["Scope Management", "MVP Thinking", "Technical Debt Awareness", "Delivery-Focused", "Risk Assessment", "Done > Perfect"] },
-    { id: "learner",      label: "Fast Learner",       rpgLabel: "Lore Seeker",      color: "#b06aff", skills: ["Self-Taught Stack Transitions", "Cross-domain Projects", "Rapid Prototyping", "Tech Stack Transitions", "Picks Up Docs Fast"] },
-    { id: "communicator", label: "Communicator",       rpgLabel: "Runic Tongue",     color: "#ff3356", skills: ["Stakeholder Reporting", "Technical Writing", "Cross-team Collaboration", "Client Demos", "Non-tech Explanations"] },
-    { id: "ownership",    label: "Ownership Mindset",  rpgLabel: "Solo Carry",       color: "#5eead4", skills: ["End-to-end Delivery", "Proactive Issue Flagging", "Beyond Job Scope", "Post-launch Support", "Accountability"] },
-    { id: "pressure",     label: "Pressure-Tested",    rpgLabel: "Last Stand",       color: "#ff8c00", skills: ["Tight Deadline Delivery", "Production Incident Handling", "Multi-project Juggling", "High-stakes Deployments"] },
+    { id: "solver", label: "Problem Solver", rpgLabel: "Dungeon Breaker", color: "#00d4ff", skills: ["Root Cause Analysis", "Debugging", "Architecture Decisions", "Workaround Design", "Trade-off Evaluation", "Incident Response"] },
+    { id: "pragmatist", label: "Pragmatist", rpgLabel: "Iron Realist", color: "#f4c542", skills: ["Scope Management", "MVP Thinking", "Technical Debt Awareness", "Delivery-Focused", "Risk Assessment", "Done > Perfect"] },
+    { id: "learner", label: "Fast Learner", rpgLabel: "Lore Seeker", color: "#b06aff", skills: ["Self-Taught Stack Transitions", "Cross-domain Projects", "Rapid Prototyping", "Tech Stack Transitions", "Picks Up Docs Fast"] },
+    { id: "communicator", label: "Communicator", rpgLabel: "Runic Tongue", color: "#ff3356", skills: ["Stakeholder Reporting", "Technical Writing", "Cross-team Collaboration", "Client Demos", "Non-tech Explanations"] },
+    { id: "ownership", label: "Ownership Mindset", rpgLabel: "Solo Carry", color: "#5eead4", skills: ["End-to-end Delivery", "Proactive Issue Flagging", "Beyond Job Scope", "Post-launch Support", "Accountability"] },
+    { id: "pressure", label: "Pressure-Tested", rpgLabel: "Last Stand", color: "#ff8c00", skills: ["Tight Deadline Delivery", "Production Incident Handling", "Multi-project Juggling", "High-stakes Deployments"] },
   ],
-  summary: "Senior Full-Stack Developer with 12+ years of experience building enterprise .NET solutions and modern React frontends. Proven track record delivering scalable systems across healthcare, fintech, and enterprise domains. Pragmatic, ownership-driven, and shipping-focused.",
+  summary: "Software Developer with 11+ years of experience building and maintaining enterprise web and desktop applications using C#, ASP.NET WebForms / MVC, and SQL Server. Most of my work involves supporting and improving legacy systems, optimizing databases, and automating everyday business processes. I'm comfortable working independently or with remote teams and focus on delivering practical, reliable solutions.",
+  education: {
+    degree: "Bachelor of Science in Information Technology",
+    school: "Tarlac State University",
+    honors: ["Cum Laude", "Best in Thesis", "Dean's Lister"],
+  },
   careerStart: "2013-09-01",
   guilds: [
     {
-      name: "The Iron Citadel Corp", cvName: "Iron Citadel Corp",
-      role: "Senior Developer / Tech Lead", rpgRole: "Senior Conjurer / War Council",
+      name: "MVP Asia Pacific, Inc.", cvName: "MVP Asia Pacific, Inc.",
+      role: ".NET Developer", rpgRole: "Arcanist",
       start: "2022-05-01", end: null,
-      desc: "Led architecture of enterprise-grade .NET solutions. Managed Azure infrastructure. Mentored junior developers and drove adoption of modern frontend frameworks.",
-      rpgDesc: "Ascended to War Council rank, commanding the citadel's most critical arcane infrastructure. Forged scalable .NET constructs, tamed the Azure cloud realm, and mentored rising conjurers in the reactive arts.",
-      bullets: [],
-      rpgBullets: [],
-      tech: [".NET 8", "Azure", "React", "SQL Server", "Azure DevOps", "Docker"],
+      desc: "Maintains and enhances enterprise web applications built on C#, ASP.NET WebForms, and MVC. Handles L2/L3 production support and collaborates with remote cross-functional teams to deliver reliable solutions.",
+      rpgDesc: "Stationed at the citadel's core, keeping its most critical arcane constructs alive and battle-ready. Called upon when production crumbles — root causes hunted, stability restored, WebForms relics preserved against all odds.",
+      bullets: [
+        "Maintains, enhances, and debugs enterprise web applications built on C#, ASP.NET WebForms, and MVC — including long-standing legacy codebases",
+        "Designs and implements new system features to meet evolving business requirements",
+        "Handles L2/L3 production support — diagnosing issues under pressure and keeping systems reliable",
+        "Collaborates with remote cross-functional teams to deliver solutions on schedule",
+        "Refactors and stabilizes existing code to reduce recurring defects and chip away at technical debt",
+      ],
+      rpgBullets: [
+        "Maintains and purges corruption from ancient WebForms relics and MVC constructs — the kind other conjurers dread to touch",
+        "Shapes new arcane constructs from raw business intent, translating guild mandates into working enchantments",
+        "Answers the L2/L3 distress signal when production crumbles — calm under siege, root causes identified fast",
+        "Coordinates with scattered war parties across remote outposts, delivering on time despite the distance",
+        "Reforges brittle spellwork — closing loops, reducing instability, and trimming the debt that haunts every old dungeon",
+      ],
+      tech: ["C#", "ASP.NET WebForms", "ASP.NET MVC", "SQL Server", "OWIN", "Swagger / OpenAPI"],
     },
     {
-      name: "Silverlight Solutions", cvName: "Silverlight Solutions",
-      role: "Senior Full-Stack Developer", rpgRole: "Full-Stack Enchanter",
+      name: "Yokohama Tire Philippines, Inc.", cvName: "Yokohama Tire Philippines, Inc.",
+      role: "Software Developer", rpgRole: "Full-Stack Enchanter",
       start: "2017-07-01", end: "2022-05-01",
-      desc: "Delivered full-stack .NET applications across healthcare and fintech domains. Pioneered React adoption across the team's frontend stack.",
-      rpgDesc: "Traversed the domains of healing magic and coin-craft, weaving .NET enchantments and pioneering the reactive illusion arts across the guild's front lines.",
-      bullets: [],
-      rpgBullets: [],
-      tech: [".NET Core", "React", "PostgreSQL", "Docker", "REST API"],
+      desc: "Built and maintained internal web and desktop applications using .NET technologies. Standardized databases, automated manual workflows, and worked closely with stakeholders to turn business needs into working software.",
+      rpgDesc: "Served the guild's inner machinery — forging .NET constructs for the web and desktop, cleansing chaotic data vaults, and replacing tedious manual rituals with automated spells that ran while others slept.",
+      bullets: [
+        "Built and maintained internal web and desktop applications using .NET technologies across multiple departments",
+        "Standardized and optimized company databases, improving data consistency and reporting accuracy",
+        "Automated manual workflows, cutting processing time and reducing human error",
+        "Supported system upgrades and continuous improvement initiatives across the organization",
+        "Worked closely with stakeholders to translate business requirements into technical solutions",
+      ],
+      rpgBullets: [
+        "Forged and maintained internal web and desktop constructs that kept the guild's daily operations running",
+        "Cleansed and standardized the data vaults — bringing order to chaotic records and making reports trustworthy again",
+        "Replaced tedious manual rituals with automated spells — hours of toil condensed into seconds",
+        "Guided system upgrades through treacherous version migrations without breaking what was already working",
+        "Bridged the gap between guild elders and the arcane — translating business decrees into functional enchantments",
+      ],
+      tech: ["C#", ".NET Framework", "ASP.NET MVC", "SQL Server", "PostgreSQL"],
     },
     {
-      name: "The Rookery", cvName: "The Rookery",
-      role: "Junior Developer", rpgRole: "Apprentice Caster",
+      name: "ZGetcare Systems, Inc.", cvName: "ZGetcare Systems, Inc.",
+      role: "Database Administrator", rpgRole: "Apprentice Caster",
       start: "2013-09-01", end: "2017-07-01",
-      desc: "Honed foundational C# and SQL skills. Contributed to internal tooling and client-facing web applications.",
-      rpgDesc: "Entered the arcane arts as an apprentice, forging the first runes in C# and SQL. Contributed to the guild's inner workings and the enchanted interfaces seen by common folk.",
-      bullets: [],
-      rpgBullets: [],
-      tech: ["ASP.NET MVC", "C#", "jQuery", "SQL Server", "HTML/CSS"],
+      desc: "Designed and optimized SQL queries and stored procedures for production systems. Built client-facing reports and kept databases performant and scalable while supporting application teams with data issues.",
+      rpgDesc: "First steps into the arcane taken here — carving runes into data vaults, shaping the scrolls clients relied on, and learning that a slow query is just a dungeon waiting to be cleared.",
+      bullets: [
+        "Designed, wrote, and optimized SQL queries and stored procedures for production systems",
+        "Built and improved client-facing reports, ensuring data accuracy and clear presentation",
+        "Maintained database performance and scalability as data volumes grew over time",
+        "Supported application teams with data-related issues, from query debugging to schema questions",
+      ],
+      rpgBullets: [
+        "Carved runes deep into the data vaults — crafting queries and stored procedures that ran fast and true",
+        "Built the scrolls clients read to understand their world — reports shaped with precision and care",
+        "Kept the ancient data stones stable and scalable as the guild's records grew heavier each season",
+        "Served as oracle for application squads — answering their data riddles and untangling schema knots",
+      ],
+      tech: ["SQL Server", "ASP.NET WebForms", "Stored Procedures", "Jasper Reports"],
     },
   ],
   achievements: [
     { title: "DUNGEON MASTER", cvTitle: "Project Leadership", desc: "Led 10+ major project deployments end-to-end", icon: "⚔", unlocked: true, rarity: "LEGENDARY" },
     { title: "POLYGLOT MAGE", cvTitle: "Multi-Stack Proficiency", desc: "Mastered 4+ technology stacks across backend and frontend", icon: "📖", unlocked: true, rarity: "EPIC" },
-    { title: "AZURE SOVEREIGN", cvTitle: "Azure Developer Associate", desc: "Microsoft certified Azure Developer Associate", icon: "☁", unlocked: true, rarity: "EPIC" },
-    { title: "GUILD VETERAN", cvTitle: "Industry Experience", desc: "8+ years of continuous professional development", icon: "🛡", unlocked: true, rarity: "RARE" },
+    { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "EPIC" },
+    { title: "GUILD VETERAN", cvTitle: "Industry Experience", desc: "11+ years of continuous professional development", icon: "🛡", unlocked: true, rarity: "RARE" },
     { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "LEGENDARY" },
     { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "EPIC" },
   ],
@@ -188,53 +229,53 @@ function SpiderChart({ categories, lightMode, accent, rpgMode, title, maxSkills,
       )}
       {/* overflow:visible lets text labels render outside the SVG bounding box */}
       <div style={{ padding: "0 16px", overflow: "visible", width: "100%", display: "flex", justifyContent: "center" }}>
-      <svg width={renderSize} height={renderSize} viewBox={`0 0 ${VB} ${VB}`} style={{ display: "block", overflow: "visible" }}>
-        {/* Grid rings */}
-        {rings.map((r, ri) => {
-          const pts = categories.map((_, i) => point(i, r * maxR));
-          const path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ") + " Z";
-          return <path key={ri} d={path} fill="none" stroke={gridColor} strokeWidth="0.8" />;
-        })}
-        {/* Axes */}
-        {categories.map((_, i) => {
-          const outer = point(i, maxR);
-          return <line key={i} x1={cx} y1={cy} x2={outer.x} y2={outer.y} stroke={axisColor} strokeWidth="0.8" />;
-        })}
-        {/* Data polygon */}
-        <path d={dataPath} fill={`${accent}1a`} stroke={accent} strokeWidth="1.6"
-          style={{ transition: "all 1.3s cubic-bezier(0.22,1,0.36,1)" }} />
-        {/* Vertex dots */}
-        {dataPoints.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="2.8" fill={accent}
-            style={{ filter: lightMode ? "none" : `drop-shadow(0 0 3px ${accent})`, transition: "all 1.3s cubic-bezier(0.22,1,0.36,1)" }} />
-        ))}
-        {/* Axis labels — overflow:visible means these render outside SVG box safely */}
-        {categories.map((cat, i) => {
-          const lp = point(i, labelR);
-          const anchor = lp.x < cx - 6 ? "end" : lp.x > cx + 6 ? "start" : "middle";
-          const label = rpgMode ? cat.rpgLabel : cat.label;
-          const words = label.split(" ");
-          const mid = Math.ceil(words.length / 2);
-          const l1 = words.slice(0, mid).join(" ");
-          const l2 = words.slice(mid).join(" ");
-          const lineH = 10;
-          const baseY = l2 ? lp.y - lineH * 0.45 : lp.y + 3;
-          return (
-            <g key={i}>
-              <text x={lp.x} y={baseY} textAnchor={anchor}
-                style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "8px", fontWeight: 700, fill: labelColor, letterSpacing: "0.01em" }}>
-                {l1}
-              </text>
-              {l2 && (
-                <text x={lp.x} y={baseY + lineH} textAnchor={anchor}
+        <svg width={renderSize} height={renderSize} viewBox={`0 0 ${VB} ${VB}`} style={{ display: "block", overflow: "visible" }}>
+          {/* Grid rings */}
+          {rings.map((r, ri) => {
+            const pts = categories.map((_, i) => point(i, r * maxR));
+            const path = pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ") + " Z";
+            return <path key={ri} d={path} fill="none" stroke={gridColor} strokeWidth="0.8" />;
+          })}
+          {/* Axes */}
+          {categories.map((_, i) => {
+            const outer = point(i, maxR);
+            return <line key={i} x1={cx} y1={cy} x2={outer.x} y2={outer.y} stroke={axisColor} strokeWidth="0.8" />;
+          })}
+          {/* Data polygon */}
+          <path d={dataPath} fill={`${accent}1a`} stroke={accent} strokeWidth="1.6"
+            style={{ transition: "all 1.3s cubic-bezier(0.22,1,0.36,1)" }} />
+          {/* Vertex dots */}
+          {dataPoints.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r="2.8" fill={accent}
+              style={{ filter: lightMode ? "none" : `drop-shadow(0 0 3px ${accent})`, transition: "all 1.3s cubic-bezier(0.22,1,0.36,1)" }} />
+          ))}
+          {/* Axis labels — overflow:visible means these render outside SVG box safely */}
+          {categories.map((cat, i) => {
+            const lp = point(i, labelR);
+            const anchor = lp.x < cx - 6 ? "end" : lp.x > cx + 6 ? "start" : "middle";
+            const label = rpgMode ? cat.rpgLabel : cat.label;
+            const words = label.split(" ");
+            const mid = Math.ceil(words.length / 2);
+            const l1 = words.slice(0, mid).join(" ");
+            const l2 = words.slice(mid).join(" ");
+            const lineH = 10;
+            const baseY = l2 ? lp.y - lineH * 0.45 : lp.y + 3;
+            return (
+              <g key={i}>
+                <text x={lp.x} y={baseY} textAnchor={anchor}
                   style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "8px", fontWeight: 700, fill: labelColor, letterSpacing: "0.01em" }}>
-                  {l2}
+                  {l1}
                 </text>
-              )}
-            </g>
-          );
-        })}
-      </svg>
+                {l2 && (
+                  <text x={lp.x} y={baseY + lineH} textAnchor={anchor}
+                    style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "8px", fontWeight: 700, fill: labelColor, letterSpacing: "0.01em" }}>
+                    {l2}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+        </svg>
       </div>
     </div>
   );
@@ -318,11 +359,11 @@ function SkillPills({ categories, lightMode, T, rpgMode }) {
         const color = lightMode
           ? (cat.color === "#00d4ff" ? "#0e5e7a"
             : cat.color === "#b06aff" ? "#6b21d0"
-            : cat.color === "#f4c542" ? "#8a6800"
-            : cat.color === "#ff3356" ? "#b01030"
-            : cat.color === "#5eead4" ? "#0d7a6a"
-            : cat.color === "#ff8c00" ? "#8a4a00"
-            : cat.color)
+              : cat.color === "#f4c542" ? "#8a6800"
+                : cat.color === "#ff3356" ? "#b01030"
+                  : cat.color === "#5eead4" ? "#0d7a6a"
+                    : cat.color === "#ff8c00" ? "#8a4a00"
+                      : cat.color)
           : cat.color;
         const displayLabel = rpgMode ? cat.rpgLabel : cat.label;
         return (
@@ -357,7 +398,7 @@ function ModeTransition({ active, isDark, toImmersive }) {
   if (!active) return null;
 
   const mainText = toImmersive ? "ENTERING IMMERSIVE MODE" : "ENTERING CLASSIC MODE";
-  const subText  = isDark
+  const subText = isDark
     ? (toImmersive ? "[ SHADOW DOMAIN INITIALIZING ]" : "[ PROFESSIONAL VIEW LOADING ]")
     : (toImmersive ? "[ DIMENSIONAL SHIFT INITIALIZING ]" : "[ PROFESSIONAL VIEW LOADING ]");
 
@@ -384,8 +425,8 @@ function ModeTransition({ active, isDark, toImmersive }) {
           {/* Underlines — 322px container (+15%), cyan primary / violet secondary / faint cyan tertiary */}
           <div style={{ width: "322px", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px" }}>
             <div style={{ width: "100%", height: "1.5px", background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.9), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.05s", boxShadow: "0 0 10px rgba(0,212,255,0.7)" }} />
-            <div style={{ width: "72%",  height: "1px",   background: "linear-gradient(90deg, transparent, rgba(176,106,255,0.7), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.10s" }} />
-            <div style={{ width: "44%",  height: "1px",   background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.14s" }} />
+            <div style={{ width: "72%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(176,106,255,0.7), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.10s" }} />
+            <div style={{ width: "44%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.14s" }} />
           </div>
           <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.45rem", letterSpacing: "0.3em", color: "rgba(0,212,255,0.5)", animation: "monarchText 0.75s ease both", animationDelay: "0.08s" }}>{subText}</div>
         </div>
@@ -414,8 +455,8 @@ function ModeTransition({ active, isDark, toImmersive }) {
         {/* Underlines — 322px container (+15%), blue primary / violet secondary / faint blue tertiary */}
         <div style={{ width: "322px", display: "flex", flexDirection: "column", alignItems: "center", gap: "3px" }}>
           <div style={{ width: "100%", height: "1.5px", background: "linear-gradient(90deg, transparent, rgba(37,99,235,0.9), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.05s", boxShadow: "0 0 8px rgba(37,99,235,0.4)" }} />
-          <div style={{ width: "72%",  height: "1px",   background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.65), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.10s" }} />
-          <div style={{ width: "44%",  height: "1px",   background: "linear-gradient(90deg, transparent, rgba(37,99,235,0.4), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.14s" }} />
+          <div style={{ width: "72%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(124,58,237,0.65), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.10s" }} />
+          <div style={{ width: "44%", height: "1px", background: "linear-gradient(90deg, transparent, rgba(37,99,235,0.4), transparent)", transformOrigin: "center", animation: "underlineGrow 0.75s ease both", animationDelay: "0.14s" }} />
         </div>
         <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.45rem", letterSpacing: "0.3em", color: "rgba(30,64,175,0.6)", animation: "monarchText 0.75s ease both", animationDelay: "0.08s" }}>{subText}</div>
       </div>
@@ -433,56 +474,56 @@ function SystemParticles({ opacity = 0.4, color = "#00d4ff", color2 = "#b06aff" 
   // ── ZONE 1: Bottom strip (y 80–97%) — densest, full drift upward ──
   // These feel like embers rising from the floor. 14 motes spread full width.
   const bottomMotes = [
-    { left:  "3%", top: "94%", size: 2,   dur: 8,    delay: 0,    col: color,  pOp: "0.70" },
-    { left: "11%", top: "88%", size: 1.5, dur: 10.5, delay: 1.2,  col: color2, pOp: "0.60" },
-    { left: "19%", top: "93%", size: 1,   dur: 7.5,  delay: 2.6,  col: color,  pOp: "0.65" },
-    { left: "27%", top: "86%", size: 2.5, dur: 9,    delay: 0.8,  col: color2, pOp: "0.55" },
-    { left: "35%", top: "91%", size: 1.5, dur: 11,   delay: 3.1,  col: color,  pOp: "0.70" },
-    { left: "44%", top: "95%", size: 1,   dur: 8.5,  delay: 1.7,  col: color2, pOp: "0.60" },
-    { left: "52%", top: "83%", size: 2,   dur: 9.5,  delay: 0.3,  col: color,  pOp: "0.65" },
-    { left: "61%", top: "90%", size: 1.5, dur: 10,   delay: 2.2,  col: color2, pOp: "0.55" },
-    { left: "69%", top: "96%", size: 1,   dur: 7.8,  delay: 3.8,  col: color,  pOp: "0.70" },
-    { left: "77%", top: "84%", size: 2,   dur: 9.2,  delay: 1.4,  col: color2, pOp: "0.60" },
-    { left: "85%", top: "92%", size: 1.5, dur: 8.2,  delay: 0.6,  col: color,  pOp: "0.65" },
-    { left: "92%", top: "87%", size: 1,   dur: 10.8, delay: 2.9,  col: color2, pOp: "0.55" },
-    { left:  "7%", top: "82%", size: 2,   dur: 9.8,  delay: 4.2,  col: color,  pOp: "0.60" },
-    { left: "96%", top: "81%", size: 1.5, dur: 8.8,  delay: 1.9,  col: color2, pOp: "0.50" },
+    { left: "3%", top: "94%", size: 2, dur: 8, delay: 0, col: color, pOp: "0.70" },
+    { left: "11%", top: "88%", size: 1.5, dur: 10.5, delay: 1.2, col: color2, pOp: "0.60" },
+    { left: "19%", top: "93%", size: 1, dur: 7.5, delay: 2.6, col: color, pOp: "0.65" },
+    { left: "27%", top: "86%", size: 2.5, dur: 9, delay: 0.8, col: color2, pOp: "0.55" },
+    { left: "35%", top: "91%", size: 1.5, dur: 11, delay: 3.1, col: color, pOp: "0.70" },
+    { left: "44%", top: "95%", size: 1, dur: 8.5, delay: 1.7, col: color2, pOp: "0.60" },
+    { left: "52%", top: "83%", size: 2, dur: 9.5, delay: 0.3, col: color, pOp: "0.65" },
+    { left: "61%", top: "90%", size: 1.5, dur: 10, delay: 2.2, col: color2, pOp: "0.55" },
+    { left: "69%", top: "96%", size: 1, dur: 7.8, delay: 3.8, col: color, pOp: "0.70" },
+    { left: "77%", top: "84%", size: 2, dur: 9.2, delay: 1.4, col: color2, pOp: "0.60" },
+    { left: "85%", top: "92%", size: 1.5, dur: 8.2, delay: 0.6, col: color, pOp: "0.65" },
+    { left: "92%", top: "87%", size: 1, dur: 10.8, delay: 2.9, col: color2, pOp: "0.55" },
+    { left: "7%", top: "82%", size: 2, dur: 9.8, delay: 4.2, col: color, pOp: "0.60" },
+    { left: "96%", top: "81%", size: 1.5, dur: 8.8, delay: 1.9, col: color2, pOp: "0.50" },
   ];
 
   // ── ZONE 2: Side edges (x 0–9% and x 91–100%, y 18–78%) — medium, anchored glimmers ──
   const edgeSparks = [
-    { left:  "2%", top: "22%", size: 1.5, dur: 5.5,  delay: 0.5,  col: color,  pOp: "0.40" },
-    { left:  "5%", top: "40%", size: 1,   dur: 7,    delay: 2.1,  col: color2, pOp: "0.35" },
-    { left:  "1%", top: "58%", size: 2,   dur: 4.8,  delay: 1.3,  col: color,  pOp: "0.42" },
-    { left:  "8%", top: "72%", size: 1,   dur: 6.2,  delay: 3.4,  col: color2, pOp: "0.30" },
-    { left: "93%", top: "28%", size: 1.5, dur: 5.8,  delay: 0.9,  col: color,  pOp: "0.40" },
-    { left: "97%", top: "46%", size: 1,   dur: 7.2,  delay: 2.7,  col: color2, pOp: "0.35" },
-    { left: "91%", top: "63%", size: 2,   dur: 4.5,  delay: 1.8,  col: color,  pOp: "0.42" },
-    { left: "95%", top: "75%", size: 1,   dur: 6.5,  delay: 3.9,  col: color2, pOp: "0.28" },
+    { left: "2%", top: "22%", size: 1.5, dur: 5.5, delay: 0.5, col: color, pOp: "0.40" },
+    { left: "5%", top: "40%", size: 1, dur: 7, delay: 2.1, col: color2, pOp: "0.35" },
+    { left: "1%", top: "58%", size: 2, dur: 4.8, delay: 1.3, col: color, pOp: "0.42" },
+    { left: "8%", top: "72%", size: 1, dur: 6.2, delay: 3.4, col: color2, pOp: "0.30" },
+    { left: "93%", top: "28%", size: 1.5, dur: 5.8, delay: 0.9, col: color, pOp: "0.40" },
+    { left: "97%", top: "46%", size: 1, dur: 7.2, delay: 2.7, col: color2, pOp: "0.35" },
+    { left: "91%", top: "63%", size: 2, dur: 4.5, delay: 1.8, col: color, pOp: "0.42" },
+    { left: "95%", top: "75%", size: 1, dur: 6.5, delay: 3.9, col: color2, pOp: "0.28" },
   ];
 
   // ── ZONE 3: Mid band (y 52–76%, x 10–90%) — sparse, soft transition layer ──
   const midGlimmers = [
-    { left: "14%", top: "55%", size: 1,   dur: 6.8,  delay: 1.1,  col: color,  pOp: "0.22" },
-    { left: "30%", top: "68%", size: 1.5, dur: 8,    delay: 2.8,  col: color2, pOp: "0.18" },
-    { left: "48%", top: "74%", size: 1,   dur: 5.5,  delay: 0.7,  col: color,  pOp: "0.20" },
-    { left: "66%", top: "60%", size: 1.5, dur: 7.5,  delay: 3.3,  col: color2, pOp: "0.18" },
-    { left: "82%", top: "71%", size: 1,   dur: 6.2,  delay: 1.6,  col: color,  pOp: "0.22" },
-    { left: "22%", top: "76%", size: 1,   dur: 9,    delay: 4.5,  col: color2, pOp: "0.16" },
-    { left: "73%", top: "53%", size: 1,   dur: 5.8,  delay: 0.4,  col: color,  pOp: "0.20" },
+    { left: "14%", top: "55%", size: 1, dur: 6.8, delay: 1.1, col: color, pOp: "0.22" },
+    { left: "30%", top: "68%", size: 1.5, dur: 8, delay: 2.8, col: color2, pOp: "0.18" },
+    { left: "48%", top: "74%", size: 1, dur: 5.5, delay: 0.7, col: color, pOp: "0.20" },
+    { left: "66%", top: "60%", size: 1.5, dur: 7.5, delay: 3.3, col: color2, pOp: "0.18" },
+    { left: "82%", top: "71%", size: 1, dur: 6.2, delay: 1.6, col: color, pOp: "0.22" },
+    { left: "22%", top: "76%", size: 1, dur: 9, delay: 4.5, col: color2, pOp: "0.16" },
+    { left: "73%", top: "53%", size: 1, dur: 5.8, delay: 0.4, col: color, pOp: "0.20" },
   ];
 
   // ── ZONE 4: Center (y 22–50%, x 22–78%) — faintest, just enough to feel alive ──
   const centerGlimmers = [
-    { left: "28%", top: "28%", size: 1,   dur: 7,    delay: 1.5,  col: color,  pOp: "0.11" },
-    { left: "45%", top: "38%", size: 1,   dur: 9.5,  delay: 3.2,  col: color2, pOp: "0.09" },
-    { left: "62%", top: "25%", size: 1,   dur: 6.5,  delay: 0.9,  col: color,  pOp: "0.10" },
-    { left: "38%", top: "48%", size: 1,   dur: 8.2,  delay: 4.1,  col: color2, pOp: "0.08" },
-    { left: "55%", top: "44%", size: 1,   dur: 7.8,  delay: 2.4,  col: color,  pOp: "0.11" },
-    { left: "72%", top: "35%", size: 1,   dur: 10,   delay: 1.1,  col: color2, pOp: "0.08" },
+    { left: "28%", top: "28%", size: 1, dur: 7, delay: 1.5, col: color, pOp: "0.11" },
+    { left: "45%", top: "38%", size: 1, dur: 9.5, delay: 3.2, col: color2, pOp: "0.09" },
+    { left: "62%", top: "25%", size: 1, dur: 6.5, delay: 0.9, col: color, pOp: "0.10" },
+    { left: "38%", top: "48%", size: 1, dur: 8.2, delay: 4.1, col: color2, pOp: "0.08" },
+    { left: "55%", top: "44%", size: 1, dur: 7.8, delay: 2.4, col: color, pOp: "0.11" },
+    { left: "72%", top: "35%", size: 1, dur: 10, delay: 1.1, col: color2, pOp: "0.08" },
   ];
 
-  const renderDrift  = (p, k) => (
+  const renderDrift = (p, k) => (
     <div key={k} style={{
       position: "absolute", left: p.left, top: p.top,
       width: p.size, height: p.size, borderRadius: "50%",
@@ -511,11 +552,11 @@ function SystemParticles({ opacity = 0.4, color = "#00d4ff", color2 = "#b06aff" 
   return (
     <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
       {/* Zone 1 — bottom strip: drift upward, most visible */}
-      {bottomMotes.map((p, i)    => renderDrift  (p, `b${i}`))}
+      {bottomMotes.map((p, i) => renderDrift(p, `b${i}`))}
       {/* Zone 2 — side edges: stationary glimmer, medium opacity */}
-      {edgeSparks.map((p, i)     => renderGlimmer(p, `e${i}`))}
+      {edgeSparks.map((p, i) => renderGlimmer(p, `e${i}`))}
       {/* Zone 3 — mid band: faint glimmer, transition layer */}
-      {midGlimmers.map((p, i)    => renderGlimmer(p, `m${i}`))}
+      {midGlimmers.map((p, i) => renderGlimmer(p, `m${i}`))}
       {/* Zone 4 — center: barely-there, just enough to feel alive */}
       {centerGlimmers.map((p, i) => renderGlimmer(p, `c${i}`))}
     </div>
@@ -611,15 +652,19 @@ function GuildSection({ rpgMode, lightMode, T }) {
         {/* Circles row — spine runs only through this row */}
         <div style={{ position: "relative", height: "32px", marginBottom: "10px" }}>
           {/* Spine — absolutely fills the circles row, truly pierces nodes */}
-          <div style={{ position: "absolute", top: "50%", left: 0, right: 0, height: "1px",
+          <div style={{
+            position: "absolute", top: "50%", left: 0, right: 0, height: "1px",
             background: rpgMode
               ? `linear-gradient(90deg, ${T.accent}55, ${T.gold}55, ${T.accent2}55)`
               : `linear-gradient(90deg, ${T.accent}40, ${T.accent}20, transparent)`,
-            transform: "translateY(-50%)", zIndex: 0 }} />
+            transform: "translateY(-50%)", zIndex: 0
+          }} />
 
           {/* Nodes row — same flex, z-index above the spine */}
-          <div style={{ display: "flex", justifyContent: "space-between", height: "100%",
-            position: "relative", zIndex: 2 }}>
+          <div style={{
+            display: "flex", justifyContent: "space-between", height: "100%",
+            position: "relative", zIndex: 2
+          }}>
             {DATA.guilds.map((g, i) => {
               const ac = accentFor(i);
               const isSelected = i === activeIdx;
@@ -627,13 +672,16 @@ function GuildSection({ rpgMode, lightMode, T }) {
                 <div key={i} className="timeline-node" onClick={() => select(i)}
                   style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {/* Pulse ring */}
-                  <div className="node-ring" style={{ position: "absolute", width: isSelected ? 36 : 24,
+                  <div className="node-ring" style={{
+                    position: "absolute", width: isSelected ? 36 : 24,
                     height: isSelected ? 36 : 24, borderRadius: "50%",
                     border: `1px solid ${ac}`, opacity: isSelected ? 0.45 : 0.12,
                     boxShadow: isSelected ? `0 0 14px ${ac}55` : "none",
-                    transition: "all 0.28s" }} />
+                    transition: "all 0.28s"
+                  }} />
                   {/* Core dot */}
-                  <div style={{ width: isSelected ? 20 : 12, height: isSelected ? 20 : 12,
+                  <div style={{
+                    width: isSelected ? 20 : 12, height: isSelected ? 20 : 12,
                     borderRadius: "50%", zIndex: 3, position: "relative",
                     background: isSelected
                       ? ac
@@ -642,7 +690,8 @@ function GuildSection({ rpgMode, lightMode, T }) {
                     boxShadow: isSelected
                       ? `0 0 12px ${ac}, 0 0 24px ${ac}44, inset 0 0 6px ${ac}66`
                       : "none",
-                    transition: "all 0.28s" }} />
+                    transition: "all 0.28s"
+                  }} />
                 </div>
               );
             })}
@@ -657,21 +706,27 @@ function GuildSection({ rpgMode, lightMode, T }) {
             const gStats = calcGuildStats(g.start, g.end);
             return (
               <div key={i} className="timeline-node" onClick={() => select(i)}
-                style={{ flex: 1, display: "flex", flexDirection: "column",
-                  alignItems: "center", textAlign: "center", padding: "0 4px" }}>
-                <div style={{ fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont,
+                style={{
+                  flex: 1, display: "flex", flexDirection: "column",
+                  alignItems: "center", textAlign: "center", padding: "0 4px"
+                }}>
+                <div style={{
+                  fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont,
                   fontWeight: isSelected ? 700 : 400, fontSize: "0.58rem",
                   color: isSelected ? ac : T.textMuted,
                   letterSpacing: rpgMode ? "0.05em" : "0.01em",
-                  lineHeight: 1.3, marginBottom: "2px", transition: "color 0.22s" }}>
+                  lineHeight: 1.3, marginBottom: "2px", transition: "color 0.22s"
+                }}>
                   {rpgMode ? g.name : g.cvName}
                 </div>
                 <div style={{ fontSize: "0.44rem", color: T.textMuted, letterSpacing: "0.04em", whiteSpace: "nowrap", lineHeight: 1.4 }}>
                   {gStats.period}
                 </div>
                 {rpgMode && (
-                  <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700,
-                    fontSize: "0.48rem", color: `${ac}77`, letterSpacing: "0.1em", marginTop: "2px" }}>
+                  <div style={{
+                    fontFamily: "'Oxanium',sans-serif", fontWeight: 700,
+                    fontSize: "0.48rem", color: `${ac}77`, letterSpacing: "0.1em", marginTop: "2px"
+                  }}>
                     LV.{gStats.level}
                   </div>
                 )}
@@ -690,30 +745,38 @@ function GuildSection({ rpgMode, lightMode, T }) {
               {/* Card header — single clean row, no duplication */}
               <div style={{ display: "flex", gap: "14px", alignItems: "flex-start", marginBottom: "16px" }}>
                 <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 4,
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 4,
                     background: lightMode ? "rgba(0,0,0,0.06)" : "rgba(0,0,0,0.5)",
                     border: `1px solid ${accent}33`,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.3rem", boxShadow: `0 0 10px ${accent}22` }}>
+                    fontSize: "1.3rem", boxShadow: `0 0 10px ${accent}22`
+                  }}>
                     {isActive ? "⚔" : "⚜"}
                   </div>
-                  <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.56rem",
+                  <div style={{
+                    fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.56rem",
                     color: accent, letterSpacing: "0.1em",
-                    textShadow: lightMode ? "none" : `0 0 6px ${accent}` }}>
+                    textShadow: lightMode ? "none" : `0 0 6px ${accent}`
+                  }}>
                     LV.{stats.level}
                   </div>
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "3px" }}>
-                    <span style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.88rem",
-                      color: T.textStrong, letterSpacing: "0.05em" }}>
+                    <span style={{
+                      fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.88rem",
+                      color: T.textStrong, letterSpacing: "0.05em"
+                    }}>
                       {guild.rpgRole}
                     </span>
                     {isActive && (
-                      <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.48rem",
+                      <span style={{
+                        fontFamily: "'Exo 2',sans-serif", fontSize: "0.48rem",
                         letterSpacing: "0.14em", color: lightMode ? "#15803d" : "#22c55e",
                         border: `1px solid ${lightMode ? "#15803d" : "#22c55e"}44`, borderRadius: 2, padding: "1px 6px",
-                        display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        display: "inline-flex", alignItems: "center", gap: "4px"
+                      }}>
                         <span style={{ width: 5, height: 5, borderRadius: "50%", background: lightMode ? "#15803d" : "#22c55e", boxShadow: `0 0 6px ${lightMode ? "#15803d" : "#22c55e"}`, display: "inline-block", animation: "pulseR 1.8s ease-in-out infinite" }} />
                         ACTIVE GUILD
                       </span>
@@ -723,12 +786,15 @@ function GuildSection({ rpgMode, lightMode, T }) {
                     {guild.name} · {stats.period} · {stats.totalYears} yrs
                   </div>
                   {/* XP bar — CSS animation, no JS stutter */}
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.44rem",
-                    color: T.textMuted, letterSpacing: "0.08em", marginBottom: "2px" }}>
+                  <div style={{
+                    display: "flex", justifyContent: "space-between", fontSize: "0.44rem",
+                    color: T.textMuted, letterSpacing: "0.08em", marginBottom: "2px"
+                  }}>
                     <span>GUILD EXP</span><span>{stats.xp.toFixed(0)} / 100</span>
                   </div>
                   <div style={{ height: 3, background: `${accent}14`, borderRadius: 2, overflow: "hidden" }}>
-                    <div key={`xp-${animKey}`} style={{ height: "100%",
+                    <div key={`xp-${animKey}`} style={{
+                      height: "100%",
                       "--xp-target": `${stats.xp}%`,
                       background: `linear-gradient(90deg,${accent}55,${accent})`,
                       boxShadow: lightMode ? "none" : `0 0 6px ${accent}88`,
@@ -756,25 +822,31 @@ function GuildSection({ rpgMode, lightMode, T }) {
               {/* Tech pills */}
               <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
                 {guild.tech.map(t => (
-                  <span key={t} style={{ background: `${accent}10`, border: `1px solid ${accent}28`,
+                  <span key={t} style={{
+                    background: `${accent}10`, border: `1px solid ${accent}28`,
                     borderRadius: 2, padding: "2px 8px", fontSize: "0.56rem",
-                    color: accent, fontFamily: "'Exo 2',sans-serif", fontWeight: 500 }}>{t}</span>
+                    color: accent, fontFamily: "'Exo 2',sans-serif", fontWeight: 500
+                  }}>{t}</span>
                 ))}
               </div>
             </div>
           </SystemPanel>
         ) : (
           /* ── CV CARD ── */
-          <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px",
-            boxShadow: lightMode ? "0 2px 12px rgba(0,0,0,0.06)" : "none", overflow: "hidden" }}>
+          <div style={{
+            background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px",
+            boxShadow: lightMode ? "0 2px 12px rgba(0,0,0,0.06)" : "none", overflow: "hidden"
+          }}>
             <div style={{ height: "3px", background: `linear-gradient(90deg,${accent},transparent)` }} />
             <div style={{ padding: "20px 22px" }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: "14px", marginBottom: "14px" }}>
                 <div style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "6px",
+                  <div style={{
+                    width: 40, height: 40, borderRadius: "6px",
                     background: lightMode ? `${accent}12` : `${accent}10`,
                     border: `1px solid ${accent}30`,
-                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem" }}>
+                    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem"
+                  }}>
                     {isActive ? "💼" : "📁"}
                   </div>
                   <div style={{ fontSize: "0.48rem", color: accent, fontWeight: 700 }}>
@@ -787,10 +859,12 @@ function GuildSection({ rpgMode, lightMode, T }) {
                       {guild.role}
                     </span>
                     {isActive && (
-                      <span style={{ fontSize: "0.6rem", color: lightMode ? "#15803d" : "#22c55e",
+                      <span style={{
+                        fontSize: "0.6rem", color: lightMode ? "#15803d" : "#22c55e",
                         background: lightMode ? "#15803d12" : "#22c55e12",
                         border: `1px solid ${lightMode ? "#15803d" : "#22c55e"}33`, borderRadius: 3, padding: "1px 7px", fontWeight: 600,
-                        display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        display: "inline-flex", alignItems: "center", gap: "4px"
+                      }}>
                         <span style={{ width: 5, height: 5, borderRadius: "50%", background: lightMode ? "#15803d" : "#22c55e", boxShadow: `0 0 5px ${lightMode ? "#15803d" : "#22c55e"}`, display: "inline-block", animation: "pulseR 1.8s ease-in-out infinite" }} />
                         Current
                       </span>
@@ -801,7 +875,8 @@ function GuildSection({ rpgMode, lightMode, T }) {
                   </div>
                   {/* CV XP / duration bar — CSS animation, no stutter */}
                   <div style={{ height: 2, background: `${accent}14`, borderRadius: 2, overflow: "hidden", maxWidth: "180px" }}>
-                    <div key={`cv-xp-${animKey}`} style={{ height: "100%",
+                    <div key={`cv-xp-${animKey}`} style={{
+                      height: "100%",
                       "--xp-target": `${stats.xp}%`,
                       background: `linear-gradient(90deg,${accent}55,${accent})`,
                       animation: "xpFill 1.2s cubic-bezier(0.4,0,0.2,1) both",
@@ -821,9 +896,11 @@ function GuildSection({ rpgMode, lightMode, T }) {
               )}
               <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
                 {guild.tech.map(t => (
-                  <span key={t} style={{ background: lightMode ? `${accent}0e` : `${accent}10`,
+                  <span key={t} style={{
+                    background: lightMode ? `${accent}0e` : `${accent}10`,
                     border: `1px solid ${accent}28`, borderRadius: "4px", padding: "2px 9px",
-                    fontSize: "0.68rem", color: accent, fontWeight: 500 }}>{t}</span>
+                    fontSize: "0.68rem", color: accent, fontWeight: 500
+                  }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -835,14 +912,16 @@ function GuildSection({ rpgMode, lightMode, T }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "14px" }}>
         <button onClick={() => select(Math.max(0, activeIdx - 1))}
           disabled={activeIdx === 0}
-          style={{ background: "none", border: `1px solid ${accent}44`,
+          style={{
+            background: "none", border: `1px solid ${accent}44`,
             borderRadius: 3, padding: "6px 14px",
             cursor: activeIdx === 0 ? "not-allowed" : "pointer",
             fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont,
             fontSize: "0.58rem", letterSpacing: "0.1em", color: accent,
             opacity: activeIdx === 0 ? 0.28 : 1,
             transition: "opacity 0.2s, border-color 0.2s",
-            filter: activeIdx === 0 ? "grayscale(0.6)" : "none" }}>
+            filter: activeIdx === 0 ? "grayscale(0.6)" : "none"
+          }}>
           {rpgMode ? "◀ PREV GUILD" : "← Previous"}
         </button>
         <div style={{ fontSize: "0.5rem", color: T.textMuted, letterSpacing: "0.1em" }}>
@@ -850,14 +929,16 @@ function GuildSection({ rpgMode, lightMode, T }) {
         </div>
         <button onClick={() => select(Math.min(DATA.guilds.length - 1, activeIdx + 1))}
           disabled={activeIdx === DATA.guilds.length - 1}
-          style={{ background: "none", border: `1px solid ${accent}44`,
+          style={{
+            background: "none", border: `1px solid ${accent}44`,
             borderRadius: 3, padding: "6px 14px",
             cursor: activeIdx === DATA.guilds.length - 1 ? "not-allowed" : "pointer",
             fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont,
             fontSize: "0.58rem", letterSpacing: "0.1em", color: accent,
             opacity: activeIdx === DATA.guilds.length - 1 ? 0.28 : 1,
             transition: "opacity 0.2s, border-color 0.2s",
-            filter: activeIdx === DATA.guilds.length - 1 ? "grayscale(0.6)" : "none" }}>
+            filter: activeIdx === DATA.guilds.length - 1 ? "grayscale(0.6)" : "none"
+          }}>
           {rpgMode ? "NEXT GUILD ▶" : "Next →"}
         </button>
       </div>
@@ -1128,13 +1209,13 @@ export default function Portfolio() {
       <div style={{ position: "relative", width: 84, height: 84, margin: "8px auto 30px" }}>
         {rpgMode && (() => {
           // Ring definitions: [size, color (dark), color (light), breath-anim, orbit-speed, orbit-dir, hotspot-color]
-          const rareC   = lightMode ? "#15803d" : "#22c55e";
+          const rareC = lightMode ? "#15803d" : "#22c55e";
           const uniqueC = lightMode ? "#7c22a8" : "#a855f7";
           const legendC = lightMode ? "#b45309" : "#f4c542";
           const rings = [
-            { d: 112, color: legendC, breath: "ringBreathLegend", orbitMs: 3200, dir: "orbitCW",  dotSize: 7 },
-            { d:  98, color: uniqueC, breath: "ringBreathUnique", orbitMs: 4800, dir: "orbitCCW", dotSize: 5 },
-            { d:  86, color: rareC,   breath: "ringBreathRare",   orbitMs: 2400, dir: "orbitCW",  dotSize: 4 },
+            { d: 112, color: legendC, breath: "ringBreathLegend", orbitMs: 3200, dir: "orbitCW", dotSize: 7 },
+            { d: 98, color: uniqueC, breath: "ringBreathUnique", orbitMs: 4800, dir: "orbitCCW", dotSize: 5 },
+            { d: 86, color: rareC, breath: "ringBreathRare", orbitMs: 2400, dir: "orbitCW", dotSize: 4 },
           ];
           return rings.map((r, i) => {
             const off = -(r.d - 84) / 2;  // center ring around 84px avatar
@@ -1214,8 +1295,8 @@ export default function Portfolio() {
         <div style={{ display: "flex", gap: "6px", marginBottom: "14px", justifyContent: "center" }}>
           {[
             { val: `${Math.floor(parseFloat(totalYears))}+`, lbl: "YRS EXP" },
-            { val: `${DATA.guilds.length}`,                  lbl: "EMPLOYERS" },
-            { val: DATA.primaryStack,                        lbl: "PRIMARY STACK" },
+            { val: `${DATA.guilds.length}`, lbl: "EMPLOYERS" },
+            { val: DATA.primaryStack, lbl: "PRIMARY STACK" },
           ].map(({ val, lbl }) => (
             <div key={lbl} style={{
               flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
@@ -1274,8 +1355,8 @@ export default function Portfolio() {
             <div style={{ display: "flex", gap: "5px" }}>
               {[
                 { val: `${Math.floor(parseFloat(totalYears))}+`, lbl: "YRS" },
-                { val: `${DATA.guilds.length}`,                  lbl: "EMP" },
-                { val: DATA.primaryStack,                        lbl: "STACK" },
+                { val: `${DATA.guilds.length}`, lbl: "EMP" },
+                { val: DATA.primaryStack, lbl: "STACK" },
               ].map(({ val, lbl }) => (
                 <div key={lbl} style={{ display: "flex", alignItems: "center", gap: "3px", padding: "2px 6px", background: `${T.accent}08`, border: `1px solid ${T.accent}22`, borderRadius: "3px" }}>
                   <span style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "0.56rem", color: T.accent }}>{val}</span>
@@ -1310,12 +1391,14 @@ export default function Portfolio() {
 
   return (
     <>
-    {loading && <SplashScreen onDone={() => setLoading(false)} />}
-    <div style={{ minHeight: "100vh", background: rpgMode && !lightMode
-        ? "radial-gradient(ellipse 110% 80% at 50% 20%, #0a1428 0%, #060c18 35%, #04060e 70%)"
-        : T.bg,
-      color: T.text, fontFamily: T.bodyFont, position: "relative", overflow: "hidden", transition: "background 0.3s, color 0.3s" }}>
-      <style>{`
+      {loading && <SplashScreen onDone={() => setLoading(false)} />}
+      <div style={{
+        minHeight: "100vh", background: rpgMode && !lightMode
+          ? "radial-gradient(ellipse 110% 80% at 50% 20%, #0a1428 0%, #060c18 35%, #04060e 70%)"
+          : T.bg,
+        color: T.text, fontFamily: T.bodyFont, position: "relative", overflow: "hidden", transition: "background 0.3s, color 0.3s"
+      }}>
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Oxanium:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
         ::selection{background:rgba(0,212,255,0.2);color:#fff;}
@@ -1395,52 +1478,52 @@ export default function Portfolio() {
         input::placeholder,textarea::placeholder{opacity:.4;}
       `}</style>
 
-      <ModeTransition active={glitching} isDark={transitionIsDark} toImmersive={transitionToImmersive} />
-      {T.scanline && <ScanlineOverlay />}
-      {T.particleOpacity > 0 && <SystemParticles opacity={T.particleOpacity} color={T.particleColor} color2={T.particleColor2} />}
+        <ModeTransition active={glitching} isDark={transitionIsDark} toImmersive={transitionToImmersive} />
+        {T.scanline && <ScanlineOverlay />}
+        {T.particleOpacity > 0 && <SystemParticles opacity={T.particleOpacity} color={T.particleColor} color2={T.particleColor2} />}
 
-      {/* Grid bg — tight 24px cells, radial fade-edge mask so center is crisp and edges dissolve into bg */}
-      <div style={{
-        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `linear-gradient(${T.gridColor} 1px, transparent 1px), linear-gradient(90deg, ${T.gridColor} 1px, transparent 1px)`,
-        backgroundSize: "24px 24px",
-        maskImage: "radial-gradient(ellipse 80% 85% at 50% 50%, black 20%, transparent 75%)",
-        WebkitMaskImage: "radial-gradient(ellipse 80% 85% at 50% 50%, black 20%, transparent 75%)",
-      }} />
+        {/* Grid bg — tight 24px cells, radial fade-edge mask so center is crisp and edges dissolve into bg */}
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: `linear-gradient(${T.gridColor} 1px, transparent 1px), linear-gradient(90deg, ${T.gridColor} 1px, transparent 1px)`,
+          backgroundSize: "24px 24px",
+          maskImage: "radial-gradient(ellipse 80% 85% at 50% 50%, black 20%, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 85% at 50% 50%, black 20%, transparent 75%)",
+        }} />
 
-      {/* NAV */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
-        {/* Logo */}
-        <div style={{ fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif", fontWeight: 800, fontSize: rpgMode ? "0.85rem" : "1rem", letterSpacing: rpgMode ? "0.2em" : "0.02em", color: T.accent, textShadow: rpgMode ? `0 0 12px ${T.accent}88` : "none", whiteSpace: "nowrap" }}>
-          {rpgMode ? "⬡ SYSTEM" : "YN"}
-        </div>
+        {/* NAV */}
+        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
+          {/* Logo */}
+          <div style={{ fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif", fontWeight: 800, fontSize: rpgMode ? "0.85rem" : "1rem", letterSpacing: rpgMode ? "0.2em" : "0.02em", color: T.accent, textShadow: rpgMode ? `0 0 12px ${T.accent}88` : "none", whiteSpace: "nowrap" }}>
+            {rpgMode ? "⬡ SYSTEM" : "YN"}
+          </div>
 
-        {/* Nav items */}
-        <div style={{ display: "flex", gap: "2px" }}>
-          {nav.map(n => (
-            <button key={n.id} className="nav-btn" onClick={() => { setSection(n.id); setSelRegion(null); }} style={{
-              fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif",
-              fontSize: rpgMode ? "0.6rem" : "0.78rem",
-              fontWeight: rpgMode ? 700 : 500,
-              letterSpacing: rpgMode ? "0.16em" : "0.02em",
-              padding: "10px 14px",
-              color: section === n.id ? T.navActiveColor : T.navItemColor,
-              borderBottom: section === n.id ? `2px solid ${T.navActiveColor}` : "1px solid transparent",
-              textShadow: section === n.id && rpgMode ? `0 0 10px ${T.navActiveColor}` : "none",
-              textTransform: rpgMode ? "uppercase" : "none",
-            }}>{n.label}</button>
-          ))}
-        </div>
+          {/* Nav items */}
+          <div style={{ display: "flex", gap: "2px" }}>
+            {nav.map(n => (
+              <button key={n.id} className="nav-btn" onClick={() => { setSection(n.id); setSelRegion(null); }} style={{
+                fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif",
+                fontSize: rpgMode ? "0.6rem" : "0.78rem",
+                fontWeight: rpgMode ? 700 : 500,
+                letterSpacing: rpgMode ? "0.16em" : "0.02em",
+                padding: "10px 14px",
+                color: section === n.id ? T.navActiveColor : T.navItemColor,
+                borderBottom: section === n.id ? `2px solid ${T.navActiveColor}` : "1px solid transparent",
+                textShadow: section === n.id && rpgMode ? `0 0 10px ${T.navActiveColor}` : "none",
+                textTransform: rpgMode ? "uppercase" : "none",
+              }}>{n.label}</button>
+            ))}
+          </div>
 
-        {/* Toggles */}
-        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <ModeToggle rpgMode={rpgMode} setRpgMode={setRpgMode} lightMode={lightMode} setLightMode={setLightMode} triggerGlitch={triggerGlitch} T={T} />
-        </div>
-      </nav>
+          {/* Toggles */}
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <ModeToggle rpgMode={rpgMode} setRpgMode={setRpgMode} lightMode={lightMode} setLightMode={setLightMode} triggerGlitch={triggerGlitch} T={T} />
+          </div>
+        </nav>
 
-      {/* ── CONTENT ─────────────────────────────── */}
-      <main style={{ paddingTop: "58px", minHeight: "100vh", position: "relative", zIndex: 10 }}>
-        <style>{`
+        {/* ── CONTENT ─────────────────────────────── */}
+        <main style={{ paddingTop: "58px", minHeight: "100vh", position: "relative", zIndex: 10 }}>
+          <style>{`
           .sidebar-layout { display: flex; gap: 0; max-width: 1240px; margin: 0 auto; }
           .sidebar-col { width: 300px; flex-shrink: 0; }
           .sidebar-sticky {
@@ -1478,281 +1561,281 @@ export default function Portfolio() {
           }
         `}</style>
 
-        {/* Mobile banner — shown only on small screens */}
-        <div className="mobile-banner" style={{ display: "none" }}><MobileBanner /></div>
+          {/* Mobile banner — shown only on small screens */}
+          <div className="mobile-banner" style={{ display: "none" }}><MobileBanner /></div>
 
-        <div className="sidebar-layout">
-          {/* ── STICKY SIDEBAR ── */}
-          <div className="sidebar-col">
-            <div className="sidebar-sticky">
-              <SidebarPanel />
+          <div className="sidebar-layout">
+            {/* ── STICKY SIDEBAR ── */}
+            <div className="sidebar-col">
+              <div className="sidebar-sticky">
+                <SidebarPanel />
+              </div>
             </div>
-          </div>
 
-          {/* ── MAIN CONTENT ── */}
-          <div className="content-col">
+            {/* ── MAIN CONTENT ── */}
+            <div className="content-col">
 
-        {/* ══ HERO / CHARACTER ══ */}
-        {section === "hero" && (
-          <div style={sharedContentStyle}>
-            {rpgMode ? (
-              <div>
-                <div style={{ marginBottom: "20px", overflow: "hidden" }}>
-                  <div style={{ height: "1px", background: `linear-gradient(90deg,transparent,${T.accent},transparent)`, animation: "bootLine 1s ease forwards" }} />
+              {/* ══ HERO / CHARACTER ══ */}
+              {section === "hero" && (
+                <div style={sharedContentStyle}>
+                  {rpgMode ? (
+                    <div>
+                      <div style={{ marginBottom: "20px", overflow: "hidden" }}>
+                        <div style={{ height: "1px", background: `linear-gradient(90deg,transparent,${T.accent},transparent)`, animation: "bootLine 1s ease forwards" }} />
+                      </div>
+
+                      {/* Tags */}
+                      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+                        {[
+                          { label: "💼 Seeking Quest", color: T.accent2 },
+                          { label: "🌐 Realm-Agnostic", color: T.accent2 },
+                          { label: "🤝 Guild-Independent", color: T.accent2 },
+                          { label: "⚡ Whisper [SOON]", color: T.textMuted, disabled: true },
+                        ].map(t => (
+                          <span key={t.label} style={{ background: t.disabled ? "transparent" : `${t.color}10`, border: `1px solid ${t.disabled ? (lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.08)") : `${t.color}30`}`, borderRadius: 2, padding: "3px 10px", fontSize: "0.55rem", color: t.disabled ? T.textMuted : t.color, fontFamily: "'Exo 2',sans-serif", fontWeight: t.disabled ? 400 : 600, letterSpacing: "0.07em", opacity: t.disabled ? 0.5 : 1, fontStyle: t.disabled ? "italic" : "normal" }}>{t.label}</span>
+                        ))}
+                      </div>
+
+                      {/* Typewriter subtitle */}
+                      <div style={{ minHeight: "1em", marginBottom: "4px" }}>
+                        <span style={{ fontSize: "0.65rem", color: T.accent2, letterSpacing: "0.1em" }}>{subtitle}</span>
+                      </div>
+                      <div style={{ fontSize: "0.5rem", letterSpacing: "0.28em", color: T.textMuted, marginBottom: "20px" }}>[ PLAYER PROFILE ]</div>
+
+                      {/* Tagline — replaces redundant name heading */}
+                      <div style={{ marginBottom: "20px", position: "relative", paddingLeft: "14px" }}>
+                        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "2px", background: `linear-gradient(180deg, ${T.accent}, transparent)`, borderRadius: "2px" }} />
+                        <h1 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "1.55rem", lineHeight: 1.25, color: T.textStrong, letterSpacing: "0.02em" }}>
+                          {DATA.tagline.split(". ").map((line, i) => (
+                            <span key={i}>
+                              {i === 1
+                                ? <><span style={{ color: T.accent, textShadow: lightMode ? "none" : `0 0 16px ${T.accent}88` }}>{line}</span></>
+                                : line + (DATA.tagline.includes(". ") && i === 0 ? ". " : "")
+                              }
+                            </span>
+                          ))}
+                        </h1>
+                      </div>
+
+                      {/* Lore */}
+                      <SystemPanel glowColor={T.accent2} lightMode={lightMode} style={{ padding: "16px", marginBottom: "16px" }}>
+                        <div style={{ fontSize: "0.5rem", letterSpacing: "0.2em", color: `${T.accent2}88`, marginBottom: "7px" }}>[ LORE ]</div>
+                        <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: T.text, fontWeight: 300 }}>{DATA.rpgSummary}</p>
+                      </SystemPanel>
+
+                      {/* Stat mini-cards */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "9px", marginBottom: "20px" }}>
+                        {[
+                          { l: "QUESTS CLEARED", v: "40+", c: T.danger },
+                          { l: "SPELLS MASTERED", v: `${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)}`, c: T.gold },
+                          { l: "GUILDS SERVED", v: `${DATA.guilds.length}`, c: T.accent },
+                        ].map(s => (
+                          <SystemPanel key={s.l} glowColor={s.c} lightMode={lightMode} style={{ padding: "11px", textAlign: "center" }}>
+                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "1.4rem", color: s.c, textShadow: lightMode ? "none" : `0 0 10px ${s.c}`, lineHeight: 1 }}>{s.v}</div>
+                            <div style={{ fontSize: "0.46rem", color: T.textMuted, letterSpacing: "0.1em", marginTop: "4px" }}>{s.l}</div>
+                          </SystemPanel>
+                        ))}
+                      </div>
+
+                      {/* Skill accordions */}
+                      <Accordion label="Class Abilities" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} spells · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
+                        <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={rpgMode} />
+                      </Accordion>
+                      <Accordion label="Innate Abilities" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} passive traits · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#8a6800" : T.gold} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
+                        <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={rpgMode} />
+                      </Accordion>
+                    </div>
+
+                  ) : (
+                    <div>
+                      {/* CV Header */}
+                      <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "24px", marginBottom: "14px", boxShadow: lightMode ? "0 2px 12px rgba(0,0,0,0.06)" : "none" }}>
+                        {/* Tagline — sidebar owns the name */}
+                        <div style={{ borderLeft: `2px solid ${T.accent}`, paddingLeft: "12px", marginBottom: "14px" }}>
+                          <h1 style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1.2rem", color: T.textStrong, lineHeight: 1.3, marginBottom: "0" }}>
+                            {DATA.taglineCV.split(". ").map((part, i, arr) => (
+                              <span key={i} style={{ color: i === 1 ? T.accent : T.textStrong }}>{part}{i < arr.length - 1 ? ". " : ""}</span>
+                            ))}
+                          </h1>
+                        </div>
+                        <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "6px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
+                        <div style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>📍 {DATA.location} · ✉ {DATA.email} · 🔗 {DATA.linkedin}</div>
+                        <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text }}>{DATA.summary}</p>
+                      </div>
+
+                      {/* Stats row */}
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "10px", marginBottom: "14px" }}>
+                        {[{ l: "Projects Delivered", v: "40+", c: T.danger }, { l: "Skills", v: `${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)}`, c: T.accent }, { l: "Years Experience", v: `${parseFloat(totalYears).toFixed(1)}`, c: T.accent2 }].map(s => (
+                          <div key={s.l} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "14px", textAlign: "center", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none" }}>
+                            <div style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1.4rem", color: s.c, lineHeight: 1 }}>{s.v}</div>
+                            <div style={{ fontSize: "0.66rem", color: T.textMuted, marginTop: "4px" }}>{s.l}</div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <Accordion label="Technical Skills" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} skills · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={false} bg={T.cardBg}>
+                        <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={false} />
+                      </Accordion>
+                      <Accordion label="Soft Skills" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} soft skills · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#2563eb" : T.accent2} lightMode={lightMode} rpgMode={false} bg={T.cardBg}>
+                        <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={false} />
+                      </Accordion>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                {/* Tags */}
-                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
-                  {[
-                    { label: "💼 Seeking Quest", color: T.accent2 },
-                    { label: "🌐 Realm-Agnostic", color: T.accent2 },
-                    { label: "🤝 Guild-Independent", color: T.accent2 },
-                    { label: "⚡ Whisper [SOON]", color: T.textMuted, disabled: true },
-                  ].map(t => (
-                    <span key={t.label} style={{ background: t.disabled ? "transparent" : `${t.color}10`, border: `1px solid ${t.disabled ? (lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.08)") : `${t.color}30`}`, borderRadius: 2, padding: "3px 10px", fontSize: "0.55rem", color: t.disabled ? T.textMuted : t.color, fontFamily: "'Exo 2',sans-serif", fontWeight: t.disabled ? 400 : 600, letterSpacing: "0.07em", opacity: t.disabled ? 0.5 : 1, fontStyle: t.disabled ? "italic" : "normal" }}>{t.label}</span>
-                  ))}
+              {/* ══ GUILDS / EXPERIENCE ══ */}
+              {section === "guilds" && (
+                <div style={sharedContentStyle}>
+                  {rpgMode ? (
+                    <>
+                      <div style={{ fontSize: "0.5rem", letterSpacing: "0.28em", color: T.textMuted, marginBottom: "4px" }}>[ WORK HISTORY ]</div>
+                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.4rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "4px" }}>GUILD <span style={{ color: T.accent }}>AFFILIATIONS</span></h2>
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "24px", width: 160 }} />
+                      <GuildSection rpgMode={true} lightMode={lightMode} T={T} />
+                    </>
+                  ) : (
+                    <CVSection title="Work Experience" light={lightMode} accent={T.accent}>
+                      <GuildSection rpgMode={false} lightMode={lightMode} T={T} />
+                    </CVSection>
+                  )}
                 </div>
+              )}
 
-                {/* Typewriter subtitle */}
-                <div style={{ minHeight: "1em", marginBottom: "4px" }}>
-                  <span style={{ fontSize: "0.65rem", color: T.accent2, letterSpacing: "0.1em" }}>{subtitle}</span>
-                </div>
-                <div style={{ fontSize: "0.5rem", letterSpacing: "0.28em", color: T.textMuted, marginBottom: "20px" }}>[ PLAYER PROFILE ]</div>
-
-                {/* Tagline — replaces redundant name heading */}
-                <div style={{ marginBottom: "20px", position: "relative", paddingLeft: "14px" }}>
-                  <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "2px", background: `linear-gradient(180deg, ${T.accent}, transparent)`, borderRadius: "2px" }} />
-                  <h1 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "1.55rem", lineHeight: 1.25, color: T.textStrong, letterSpacing: "0.02em" }}>
-                    {DATA.tagline.split(". ").map((line, i) => (
-                      <span key={i}>
-                        {i === 1
-                          ? <><span style={{ color: T.accent, textShadow: lightMode ? "none" : `0 0 16px ${T.accent}88` }}>{line}</span></>
-                          : line + (DATA.tagline.includes(". ") && i === 0 ? ". " : "")
-                        }
-                      </span>
-                    ))}
-                  </h1>
-                </div>
-
-                {/* Lore */}
-                <SystemPanel glowColor={T.accent2} lightMode={lightMode} style={{ padding: "16px", marginBottom: "16px" }}>
-                  <div style={{ fontSize: "0.5rem", letterSpacing: "0.2em", color: `${T.accent2}88`, marginBottom: "7px" }}>[ LORE ]</div>
-                  <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: T.text, fontWeight: 300 }}>{DATA.rpgSummary}</p>
-                </SystemPanel>
-
-                {/* Stat mini-cards */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "9px", marginBottom: "20px" }}>
-                  {[
-                    { l: "QUESTS CLEARED", v: "40+", c: T.danger },
-                    { l: "SPELLS MASTERED", v: `${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)}`, c: T.gold },
-                    { l: "GUILDS SERVED", v: `${DATA.guilds.length}`, c: T.accent },
-                  ].map(s => (
-                    <SystemPanel key={s.l} glowColor={s.c} lightMode={lightMode} style={{ padding: "11px", textAlign: "center" }}>
-                      <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "1.4rem", color: s.c, textShadow: lightMode ? "none" : `0 0 10px ${s.c}`, lineHeight: 1 }}>{s.v}</div>
-                      <div style={{ fontSize: "0.46rem", color: T.textMuted, letterSpacing: "0.1em", marginTop: "4px" }}>{s.l}</div>
-                    </SystemPanel>
-                  ))}
-                </div>
-
-                {/* Skill accordions */}
-                <Accordion label="Class Abilities" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} spells · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
-                  <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={rpgMode} />
-                </Accordion>
-                <Accordion label="Innate Abilities" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} passive traits · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#8a6800" : T.gold} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
-                  <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={rpgMode} />
-                </Accordion>
-              </div>
-
-            ) : (
-              <div>
-                {/* CV Header */}
-                <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "24px", marginBottom: "14px", boxShadow: lightMode ? "0 2px 12px rgba(0,0,0,0.06)" : "none" }}>
-                  {/* Tagline — sidebar owns the name */}
-                  <div style={{ borderLeft: `2px solid ${T.accent}`, paddingLeft: "12px", marginBottom: "14px" }}>
-                    <h1 style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1.2rem", color: T.textStrong, lineHeight: 1.3, marginBottom: "0" }}>
-                      {DATA.taglineCV.split(". ").map((part, i, arr) => (
-                        <span key={i} style={{ color: i === 1 ? T.accent : T.textStrong }}>{part}{i < arr.length - 1 ? ". " : ""}</span>
+              {/* ══ ACHIEVEMENTS / CERTS ══ */}
+              {section === "achievements" && (
+                <div style={sharedContentStyle}>
+                  {rpgMode ? (
+                    <>
+                      <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ MILESTONES ]</div>
+                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>ACHIEVEMENT <span style={{ color: T.accent }}>LOG</span></h2>
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "13px" }}>
+                        {DATA.achievements.map((a, i) => (
+                          <div key={i} style={{ background: lightMode ? "rgba(228,234,240,0.95)" : "rgba(6,14,26,0.95)", border: `1px solid ${a.unlocked ? RARITY_COLOR[a.rarity] + "22" : "rgba(128,128,128,0.1)"}`, borderRadius: 4, padding: "18px", position: "relative", overflow: "hidden", opacity: a.unlocked ? 1 : 0.35, filter: a.unlocked ? "none" : "grayscale(0.8)", transition: "all .25s" }}>
+                            {a.unlocked && <div style={{ position: "absolute", top: 9, right: 9, fontSize: "0.5rem", letterSpacing: "0.12em", color: RARITY_COLOR[a.rarity], fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{a.rarity}</div>}
+                            <div style={{ fontSize: "2rem", marginBottom: "10px" }}>{a.icon}</div>
+                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.72rem", color: a.unlocked ? RARITY_COLOR[a.rarity] : T.textMuted, letterSpacing: "0.07em", marginBottom: "6px", textShadow: a.unlocked && !lightMode ? `0 0 7px ${RARITY_COLOR[a.rarity]}` : "none" }}>{a.title}</div>
+                            <div style={{ fontSize: "0.68rem", color: T.text, lineHeight: 1.5, fontWeight: 300 }}>{a.desc}</div>
+                            {a.unlocked && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,transparent,${RARITY_COLOR[a.rarity]},transparent)` }} />}
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <CVSection title="Certifications & Achievements" light={lightMode} accent={T.accent}>
+                      {DATA.achievements.filter(a => a.unlocked).map((a, i) => (
+                        <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px 20px", marginBottom: "10px", display: "flex", gap: "16px", alignItems: "center", boxShadow: lightMode ? "0 1px 4px rgba(0,0,0,0.04)" : "none" }}>
+                          <div style={{ fontSize: "1.6rem", flexShrink: 0 }}>{a.icon}</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "3px" }}>{a.cvTitle}</div>
+                            <div style={{ fontSize: "0.75rem", color: T.textMuted }}>{a.desc}</div>
+                          </div>
+                          <span style={{ background: lightMode ? "#f0fdf4" : `${T.accent2}10`, border: `1px solid ${lightMode ? "#86efac" : `${T.accent2}30`}`, borderRadius: "4px", padding: "2px 10px", fontSize: "0.62rem", color: lightMode ? "#16a34a" : T.accent2, fontWeight: 600, whiteSpace: "nowrap" }}>{a.rarity}</span>
+                        </div>
                       ))}
-                    </h1>
-                  </div>
-                  <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "6px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
-                  <div style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>📍 {DATA.location} · ✉ {DATA.email} · 🔗 {DATA.linkedin}</div>
-                  <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text }}>{DATA.summary}</p>
+                    </CVSection>
+                  )}
                 </div>
+              )}
 
-                {/* Stats row */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "10px", marginBottom: "14px" }}>
-                  {[{ l: "Projects Delivered", v: "40+", c: T.danger }, { l: "Skills", v: `${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)}`, c: T.accent }, { l: "Years Experience", v: `${parseFloat(totalYears).toFixed(1)}`, c: T.accent2 }].map(s => (
-                    <div key={s.l} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "14px", textAlign: "center", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none" }}>
-                      <div style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1.4rem", color: s.c, lineHeight: 1 }}>{s.v}</div>
-                      <div style={{ fontSize: "0.66rem", color: T.textMuted, marginTop: "4px" }}>{s.l}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <Accordion label="Technical Skills" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} skills · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={false} bg={T.cardBg}>
-                  <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={false} />
-                </Accordion>
-                <Accordion label="Soft Skills" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} soft skills · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#2563eb" : T.accent2} lightMode={lightMode} rpgMode={false} bg={T.cardBg}>
-                  <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={false} />
-                </Accordion>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ══ GUILDS / EXPERIENCE ══ */}
-        {section === "guilds" && (
-          <div style={sharedContentStyle}>
-            {rpgMode ? (
-              <>
-                <div style={{ fontSize: "0.5rem", letterSpacing: "0.28em", color: T.textMuted, marginBottom: "4px" }}>[ WORK HISTORY ]</div>
-                <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.4rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "4px" }}>GUILD <span style={{ color: T.accent }}>AFFILIATIONS</span></h2>
-                <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "24px", width: 160 }} />
-                <GuildSection rpgMode={true} lightMode={lightMode} T={T} />
-              </>
-            ) : (
-              <CVSection title="Work Experience" light={lightMode} accent={T.accent}>
-                <GuildSection rpgMode={false} lightMode={lightMode} T={T} />
-              </CVSection>
-            )}
-          </div>
-        )}
-
-        {/* ══ ACHIEVEMENTS / CERTS ══ */}
-        {section === "achievements" && (
-          <div style={sharedContentStyle}>
-            {rpgMode ? (
-              <>
-                <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ MILESTONES ]</div>
-                <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>ACHIEVEMENT <span style={{ color: T.accent }}>LOG</span></h2>
-                <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "13px" }}>
-                  {DATA.achievements.map((a, i) => (
-                    <div key={i} style={{ background: lightMode ? "rgba(228,234,240,0.95)" : "rgba(6,14,26,0.95)", border: `1px solid ${a.unlocked ? RARITY_COLOR[a.rarity] + "22" : "rgba(128,128,128,0.1)"}`, borderRadius: 4, padding: "18px", position: "relative", overflow: "hidden", opacity: a.unlocked ? 1 : 0.35, filter: a.unlocked ? "none" : "grayscale(0.8)", transition: "all .25s" }}>
-                      {a.unlocked && <div style={{ position: "absolute", top: 9, right: 9, fontSize: "0.5rem", letterSpacing: "0.12em", color: RARITY_COLOR[a.rarity], fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{a.rarity}</div>}
-                      <div style={{ fontSize: "2rem", marginBottom: "10px" }}>{a.icon}</div>
-                      <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.72rem", color: a.unlocked ? RARITY_COLOR[a.rarity] : T.textMuted, letterSpacing: "0.07em", marginBottom: "6px", textShadow: a.unlocked && !lightMode ? `0 0 7px ${RARITY_COLOR[a.rarity]}` : "none" }}>{a.title}</div>
-                      <div style={{ fontSize: "0.68rem", color: T.text, lineHeight: 1.5, fontWeight: 300 }}>{a.desc}</div>
-                      {a.unlocked && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,transparent,${RARITY_COLOR[a.rarity]},transparent)` }} />}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <CVSection title="Certifications & Achievements" light={lightMode} accent={T.accent}>
-                {DATA.achievements.filter(a => a.unlocked).map((a, i) => (
-                  <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px 20px", marginBottom: "10px", display: "flex", gap: "16px", alignItems: "center", boxShadow: lightMode ? "0 1px 4px rgba(0,0,0,0.04)" : "none" }}>
-                    <div style={{ fontSize: "1.6rem", flexShrink: 0 }}>{a.icon}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "3px" }}>{a.cvTitle}</div>
-                      <div style={{ fontSize: "0.75rem", color: T.textMuted }}>{a.desc}</div>
-                    </div>
-                    <span style={{ background: lightMode ? "#f0fdf4" : `${T.accent2}10`, border: `1px solid ${lightMode ? "#86efac" : `${T.accent2}30`}`, borderRadius: "4px", padding: "2px 10px", fontSize: "0.62rem", color: lightMode ? "#16a34a" : T.accent2, fontWeight: 600, whiteSpace: "nowrap" }}>{a.rarity}</span>
-                  </div>
-                ))}
-              </CVSection>
-            )}
-          </div>
-        )}
-
-        {/* ══ MAP / PROJECTS ══ */}
-        {section === "map" && (
-          <div style={sharedContentStyle}>
-            {rpgMode ? (
-              <>
-                <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ TERRITORIES ]</div>
-                <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>KNOWN <span style={{ color: T.accent }}>REALMS</span></h2>
-                <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "20px", width: 180 }} />
-                <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ paddingBottom: "54%", position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", inset: 0, background: lightMode ? "radial-gradient(ellipse at 50% 50%,rgba(200,215,230,0.5) 0%,rgba(218,226,236,0.97) 80%)" : "radial-gradient(ellipse at 50% 50%,rgba(0,30,40,.6) 0%,rgba(2,8,14,.97) 80%)" }} />
-                  <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${T.gridColor} 1px,transparent 1px),linear-gradient(90deg,${T.gridColor} 1px,transparent 1px)`, backgroundSize: "60px 60px" }} />
-                  <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {["M20,32 Q35,26 50,20", "M50,20 Q62,29 74,38", "M20,32 Q26,48 33,65", "M33,65 Q49,66 65,68", "M74,38 Q69,53 65,68"].map((d, i) => <path key={i} d={d} stroke={`${T.accent}22`} strokeWidth="0.22" fill="none" strokeDasharray="1.5,1.5" />)}
-                  </svg>
-                  <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "2.8rem", letterSpacing: "0.4em", color: `${T.accent}08`, pointerEvents: "none", whiteSpace: "nowrap", userSelect: "none" }}>THE REALMS</div>
-                  <div style={{ position: "absolute", bottom: 14, right: 18, fontFamily: "'Exo 2',sans-serif", fontSize: "0.52rem", color: T.textMuted, textAlign: "center", lineHeight: 1.7, letterSpacing: "0.1em" }}>N<br /><span style={{ fontSize: "0.85rem" }}>✦</span><br />S</div>
-                  <div style={{ position: "absolute", top: 11, left: 14, fontFamily: "'Exo 2',sans-serif", fontSize: "0.5rem", color: T.textMuted, letterSpacing: "0.1em" }}>[ MAP v1.0 · 5 REGIONS ]</div>
-                  {DATA.regions.map(r => <WorldRegion key={r.id} region={r} onClick={setSelRegion} rpgMode={true} accent={T.accent} />)}
-                </SystemPanel>
-                {selRegion ? (
-                  <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "14px 18px", marginTop: "14px", display: "flex", gap: "14px", alignItems: "center" }}>
-                    <div style={{ fontSize: "1.2rem" }}>🗺</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.8rem", color: T.accent, marginBottom: "3px", letterSpacing: "0.07em" }}>{selRegion.name}</div>
-                      <div style={{ fontSize: "0.68rem", color: T.textMuted, fontWeight: 300 }}>⚠ This realm has yet to be discovered. Return when the quest is ready, traveler.</div>
-                    </div>
-                    <button onClick={() => setSelRegion(null)} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: "1rem" }}>✕</button>
-                  </SystemPanel>
-                ) : <div style={{ marginTop: "10px", fontSize: "0.57rem", color: T.textMuted, letterSpacing: "0.14em", textAlign: "center" }}>CLICK A NODE TO INSPECT REGION</div>}
-              </>
-            ) : (
-              <CVSection title="Projects" light={lightMode} accent={T.accent}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
-                  {DATA.regions.map((r, i) => (
-                    <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "20px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden" }}>
-                      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${T.accent},transparent)` }} />
-                      <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "6px" }}>{r.cvName}</div>
-                      <div style={{ fontSize: "0.75rem", color: T.textMuted, lineHeight: 1.6, marginBottom: "14px" }}>{r.desc}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                        <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.gold }} />
-                        <span style={{ fontSize: "0.62rem", color: T.textMuted, fontWeight: 500 }}>Coming Soon</span>
+              {/* ══ MAP / PROJECTS ══ */}
+              {section === "map" && (
+                <div style={sharedContentStyle}>
+                  {rpgMode ? (
+                    <>
+                      <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ TERRITORIES ]</div>
+                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>KNOWN <span style={{ color: T.accent }}>REALMS</span></h2>
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "20px", width: 180 }} />
+                      <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ paddingBottom: "54%", position: "relative", overflow: "hidden" }}>
+                        <div style={{ position: "absolute", inset: 0, background: lightMode ? "radial-gradient(ellipse at 50% 50%,rgba(200,215,230,0.5) 0%,rgba(218,226,236,0.97) 80%)" : "radial-gradient(ellipse at 50% 50%,rgba(0,30,40,.6) 0%,rgba(2,8,14,.97) 80%)" }} />
+                        <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${T.gridColor} 1px,transparent 1px),linear-gradient(90deg,${T.gridColor} 1px,transparent 1px)`, backgroundSize: "60px 60px" }} />
+                        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} viewBox="0 0 100 100" preserveAspectRatio="none">
+                          {["M20,32 Q35,26 50,20", "M50,20 Q62,29 74,38", "M20,32 Q26,48 33,65", "M33,65 Q49,66 65,68", "M74,38 Q69,53 65,68"].map((d, i) => <path key={i} d={d} stroke={`${T.accent}22`} strokeWidth="0.22" fill="none" strokeDasharray="1.5,1.5" />)}
+                        </svg>
+                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "2.8rem", letterSpacing: "0.4em", color: `${T.accent}08`, pointerEvents: "none", whiteSpace: "nowrap", userSelect: "none" }}>THE REALMS</div>
+                        <div style={{ position: "absolute", bottom: 14, right: 18, fontFamily: "'Exo 2',sans-serif", fontSize: "0.52rem", color: T.textMuted, textAlign: "center", lineHeight: 1.7, letterSpacing: "0.1em" }}>N<br /><span style={{ fontSize: "0.85rem" }}>✦</span><br />S</div>
+                        <div style={{ position: "absolute", top: 11, left: 14, fontFamily: "'Exo 2',sans-serif", fontSize: "0.5rem", color: T.textMuted, letterSpacing: "0.1em" }}>[ MAP v1.0 · 5 REGIONS ]</div>
+                        {DATA.regions.map(r => <WorldRegion key={r.id} region={r} onClick={setSelRegion} rpgMode={true} accent={T.accent} />)}
+                      </SystemPanel>
+                      {selRegion ? (
+                        <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "14px 18px", marginTop: "14px", display: "flex", gap: "14px", alignItems: "center" }}>
+                          <div style={{ fontSize: "1.2rem" }}>🗺</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.8rem", color: T.accent, marginBottom: "3px", letterSpacing: "0.07em" }}>{selRegion.name}</div>
+                            <div style={{ fontSize: "0.68rem", color: T.textMuted, fontWeight: 300 }}>⚠ This realm has yet to be discovered. Return when the quest is ready, traveler.</div>
+                          </div>
+                          <button onClick={() => setSelRegion(null)} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: "1rem" }}>✕</button>
+                        </SystemPanel>
+                      ) : <div style={{ marginTop: "10px", fontSize: "0.57rem", color: T.textMuted, letterSpacing: "0.14em", textAlign: "center" }}>CLICK A NODE TO INSPECT REGION</div>}
+                    </>
+                  ) : (
+                    <CVSection title="Projects" light={lightMode} accent={T.accent}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                        {DATA.regions.map((r, i) => (
+                          <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "20px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden" }}>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${T.accent},transparent)` }} />
+                            <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "6px" }}>{r.cvName}</div>
+                            <div style={{ fontSize: "0.75rem", color: T.textMuted, lineHeight: 1.6, marginBottom: "14px" }}>{r.desc}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                              <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.gold }} />
+                              <span style={{ fontSize: "0.62rem", color: T.textMuted, fontWeight: 500 }}>Coming Soon</span>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    </div>
-                  ))}
+                    </CVSection>
+                  )}
                 </div>
-              </CVSection>
-            )}
-          </div>
-        )}
+              )}
 
-        {/* ══ CONTACT ══ */}
-        {section === "contact" && (
-          <div style={{ ...sharedContentStyle, maxWidth: "580px" }}>
-            {rpgMode ? (
-              <>
-                <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ COMMUNICATION ]</div>
-                <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>DISPATCH <span style={{ color: T.accent }}>A RAVEN</span></h2>
-                <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
-                <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "26px" }}>
-                  {[{ l: "TRAVELER IDENTITY", p: "Enter your name..." }, { l: "RAVEN FREQUENCY", p: "your@email.com" }].map(f => (
-                    <div key={f.l} style={{ marginBottom: "16px" }}>
-                      <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
-                      <input placeholder={f.p} style={{ background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
-                    </div>
-                  ))}
-                  <div style={{ marginBottom: "22px" }}>
-                    <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
-                    <textarea placeholder="Your message..." style={{ minHeight: 120, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
-                  </div>
-                  <button style={{ background: `${T.accent}10`, border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "11px 28px", color: T.accent, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s" }}>▶ DISPATCH RAVEN</button>
-                </SystemPanel>
-              </>
-            ) : (
-              <>
-                <CVSection title="Contact" light={lightMode} accent={T.accent}>
-                  <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
-                    {[{ l: "Your Name", p: "Full name" }, { l: "Email Address", p: "your@email.com" }].map(f => (
-                      <div key={f.l} style={{ marginBottom: "16px" }}>
-                        <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
-                        <input placeholder={f.p} style={{ background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
-                      </div>
-                    ))}
-                    <div style={{ marginBottom: "22px" }}>
-                      <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
-                      <textarea placeholder="How can I help you?" style={{ minHeight: 120, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
-                    </div>
-                    <button style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s" }}>Send Message</button>
-                  </div>
-                </CVSection>
-              </>
-            )}
-          </div>
-        )}
-        </div>{/* content-col */}
-        </div>{/* sidebar-layout */}
-      </main>
-    </div>
+              {/* ══ CONTACT ══ */}
+              {section === "contact" && (
+                <div style={{ ...sharedContentStyle, maxWidth: "580px" }}>
+                  {rpgMode ? (
+                    <>
+                      <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ COMMUNICATION ]</div>
+                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>DISPATCH <span style={{ color: T.accent }}>A RAVEN</span></h2>
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
+                      <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "26px" }}>
+                        {[{ l: "TRAVELER IDENTITY", p: "Enter your name..." }, { l: "RAVEN FREQUENCY", p: "your@email.com" }].map(f => (
+                          <div key={f.l} style={{ marginBottom: "16px" }}>
+                            <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
+                            <input placeholder={f.p} style={{ background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                          </div>
+                        ))}
+                        <div style={{ marginBottom: "22px" }}>
+                          <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
+                          <textarea placeholder="Your message..." style={{ minHeight: 120, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                        </div>
+                        <button style={{ background: `${T.accent}10`, border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "11px 28px", color: T.accent, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s" }}>▶ DISPATCH RAVEN</button>
+                      </SystemPanel>
+                    </>
+                  ) : (
+                    <>
+                      <CVSection title="Contact" light={lightMode} accent={T.accent}>
+                        <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
+                          {[{ l: "Your Name", p: "Full name" }, { l: "Email Address", p: "your@email.com" }].map(f => (
+                            <div key={f.l} style={{ marginBottom: "16px" }}>
+                              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
+                              <input placeholder={f.p} style={{ background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                            </div>
+                          ))}
+                          <div style={{ marginBottom: "22px" }}>
+                            <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
+                            <textarea placeholder="How can I help you?" style={{ minHeight: 120, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                          </div>
+                          <button style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s" }}>Send Message</button>
+                        </div>
+                      </CVSection>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>{/* content-col */}
+          </div>{/* sidebar-layout */}
+        </main>
+      </div>
     </>
   );
 }
