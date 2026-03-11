@@ -4,10 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 const DATA = {
   name: "ERWIN TAYAG",
   title: "Software Developer (.NET / C#)",
-  rpgTitle: ".NET ARCHMAGE",
+  rpgTitle: "RELIC ARCHMAGE",
   location: "Capas, Tarlac, Philippines",
-  phone: "+63 921 541 9326",
-  email: "tayag.erwin.macale@gmail.com",
+  phone: "+63 92# 541 ####",
   linkedin: "https://www.linkedin.com/in/tayag-erwin-macale/",
   github: "https://github.com/erwintayag",
   primaryStack: ".NET · C#",   // shown in Classic sidebar career snapshot
@@ -53,13 +52,15 @@ const DATA = {
   education: {
     degree: "Bachelor of Science in Information Technology",
     school: "Tarlac State University",
-    honors: ["Cum Laude", "Best in Thesis", "Dean's Lister"],
+    honors: ["Cum Laude", "Best in Thesis Awardee"],
+    rpgSchool: "Amplus Citadel of Arcane Learning",
+    rpgHonors: "Arcane Laureate · Scroll Sovereign",
   },
   careerStart: "2013-09-01",
   guilds: [
     {
       name: "MVP Asia Pacific, Inc.", cvName: "MVP Asia Pacific, Inc.",
-      role: ".NET Developer", rpgRole: "Arcanist",
+      role: ".NET Developer", rpgRole: "Siege Arcanist",
       start: "2022-05-01", end: null,
       desc: "Maintains and enhances enterprise web applications built on C#, ASP.NET WebForms, and MVC. Handles L2/L3 production support and collaborates with remote cross-functional teams to deliver reliable solutions.",
       rpgDesc: "Stationed at the citadel's core, keeping its most critical arcane constructs alive and battle-ready. Called upon when production crumbles — root causes hunted, stability restored, WebForms relics preserved against all odds.",
@@ -81,7 +82,7 @@ const DATA = {
     },
     {
       name: "Yokohama Tire Philippines, Inc.", cvName: "Yokohama Tire Philippines, Inc.",
-      role: "Software Developer", rpgRole: "Full-Stack Enchanter",
+      role: "Software Developer", rpgRole: "Guild Artificer",
       start: "2017-07-01", end: "2022-05-01",
       desc: "Built and maintained internal web and desktop applications using .NET technologies. Standardized databases, automated manual workflows, and worked closely with stakeholders to turn business needs into working software.",
       rpgDesc: "Served the guild's inner machinery — forging .NET constructs for the web and desktop, cleansing chaotic data vaults, and replacing tedious manual rituals with automated spells that ran while others slept.",
@@ -99,11 +100,11 @@ const DATA = {
         "Guided system upgrades through treacherous version migrations without breaking what was already working",
         "Bridged the gap between guild elders and the arcane — translating business decrees into functional enchantments",
       ],
-      tech: ["C#", ".NET Framework", "ASP.NET MVC", "SQL Server", "PostgreSQL"],
+      tech: ["C#", ".NET Framework", "ASP.NET WebForms", "Power BI", "ASP.NET MVC", "Oracle"],
     },
     {
       name: "ZGetcare Systems, Inc.", cvName: "ZGetcare Systems, Inc.",
-      role: "Database Administrator", rpgRole: "Apprentice Caster",
+      role: "Database Administrator", rpgRole: "Rune Carver",
       start: "2013-09-01", end: "2017-07-01",
       desc: "Designed and optimized SQL queries and stored procedures for production systems. Built client-facing reports and kept databases performant and scalable while supporting application teams with data issues.",
       rpgDesc: "First steps into the arcane taken here — carving runes into data vaults, shaping the scrolls clients relied on, and learning that a slow query is just a dungeon waiting to be cleared.",
@@ -119,16 +120,8 @@ const DATA = {
         "Kept the ancient data stones stable and scalable as the guild's records grew heavier each season",
         "Served as oracle for application squads — answering their data riddles and untangling schema knots",
       ],
-      tech: ["SQL Server", "ASP.NET WebForms", "Stored Procedures", "Jasper Reports"],
+      tech: ["Java", "PostgreSQL", "PL/SQL", "Jasper Reports"],
     },
-  ],
-  achievements: [
-    { title: "DUNGEON MASTER", cvTitle: "Project Leadership", desc: "Led 10+ major project deployments end-to-end", icon: "⚔", unlocked: true, rarity: "LEGENDARY" },
-    { title: "POLYGLOT MAGE", cvTitle: "Multi-Stack Proficiency", desc: "Mastered 4+ technology stacks across backend and frontend", icon: "📖", unlocked: true, rarity: "EPIC" },
-    { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "EPIC" },
-    { title: "GUILD VETERAN", cvTitle: "Industry Experience", desc: "11+ years of continuous professional development", icon: "🛡", unlocked: true, rarity: "RARE" },
-    { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "LEGENDARY" },
-    { title: "???", cvTitle: "???", desc: "Locked achievement", icon: "🔒", unlocked: false, rarity: "EPIC" },
   ],
   regions: [
     { id: 1, name: "The Arcane Forge", cvName: "Tools & Utilities", desc: "A crafting & developer tools project", x: 20, y: 32 },
@@ -287,7 +280,7 @@ function DualSpiderChart({ skillCategories, innateAbilities, lightMode, accent, 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0px", alignItems: "center", width: "100%" }}>
       <div style={{ fontSize: "0.42rem", letterSpacing: "0.14em", color: `${accent}88`, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, marginBottom: "2px", textTransform: "uppercase", textAlign: "center" }}>
-        {rpgMode ? "· Class Abilities ·" : "· Technical ·"}
+        {rpgMode ? "· Arcane Disciplines ·" : "· Technical ·"}
       </div>
       <SpiderChart
         categories={skillCategories} lightMode={lightMode} accent={accent}
@@ -297,7 +290,7 @@ function DualSpiderChart({ skillCategories, innateAbilities, lightMode, accent, 
       />
       <div style={{ height: "1px", background: `${accent}14`, width: "55%", alignSelf: "center", margin: "4px 0" }} />
       <div style={{ fontSize: "0.42rem", letterSpacing: "0.14em", color: `${innateAccent}88`, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, marginBottom: "2px", textTransform: "uppercase", textAlign: "center" }}>
-        {rpgMode ? "· Innate Abilities ·" : "· Soft Skills ·"}
+        {rpgMode ? "· Passive Enchantments ·" : "· Soft Skills ·"}
       </div>
       <SpiderChart
         categories={innateAbilities} lightMode={lightMode} accent={innateAccent}
@@ -813,7 +806,7 @@ function GuildSection({ rpgMode, lightMode, T }) {
               {guild.rpgBullets.length > 0 && (
                 <ul style={{ paddingLeft: "16px", marginBottom: "14px", display: "flex", flexDirection: "column", gap: "5px" }}>
                   {guild.rpgBullets.map((b, bi) => (
-                    <li key={bi} style={{ fontSize: "0.78rem", color: T.text, lineHeight: 1.7, fontWeight: 300 }}>
+                    <li key={bi} style={{ fontSize: "0.78rem", color: T.text, lineHeight: 1.7, fontWeight: 300, listStyleType: "none", }}>
                       <span style={{ color: accent, marginRight: "6px" }}>▸</span>{b}
                     </li>
                   ))}
@@ -1119,6 +1112,11 @@ function SplashScreen({ onDone }) {
   );
 }
 
+// ─── CONTACT ──────────────────────────────────────────────────────────────
+// Replace this placeholder with your real Formspree endpoint URL.
+// Steps: sign up at formspree.io → New Form → copy the URL → paste below.
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgawygo";
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────
 export default function Portfolio() {
   const [loading, setLoading] = useState(true);
@@ -1129,6 +1127,7 @@ export default function Portfolio() {
   const [transitionToImmersive, setTransitionToImmersive] = useState(true);
   const [section, setSection] = useState("hero");
   const [selRegion, setSelRegion] = useState(null);
+  const [formStatus, setFormStatus] = useState("idle"); // idle | submitting | success | error
   const { level, xp, totalYears } = useCareerStats();
   const xpAnimated = useCountUp(xp, 1800);
   const subtitle = useTypewriter(DATA.rpgTitle, 46);
@@ -1195,10 +1194,13 @@ export default function Portfolio() {
   };
 
   const nav = rpgMode
-    ? [{ id: "hero", label: "CHARACTER" }, { id: "guilds", label: "GUILDS" }, { id: "achievements", label: "ACHIEVEMENTS" }, { id: "map", label: "WORLD MAP" }, { id: "contact", label: "SEND RAVEN" }]
-    : [{ id: "hero", label: "Profile" }, { id: "guilds", label: "Experience" }, { id: "achievements", label: "Certifications" }, { id: "map", label: "Projects" }, { id: "contact", label: "Contact" }];
+    ? [{ id: "hero", label: "CHARACTER" }, { id: "grimoire", label: "GRIMOIRE" }, { id: "guilds", label: "GUILDS" }, { id: "contact", label: "SEND RAVEN" }]
+    : [{ id: "hero", label: "Profile" }, { id: "guilds", label: "Experience" }, { id: "grimoire", label: "Tech Stack" }, { id: "contact", label: "Contact" }];
 
   const sharedContentStyle = { padding: "24px", animation: "sectionIn 0.4s ease both" };
+  const skillColor = (hex) => lightMode
+    ? ({ "#00d4ff": "#0e5e7a", "#b06aff": "#6b21d0", "#f4c542": "#8a6800", "#ff3356": "#b01030", "#5eead4": "#0d7a6a", "#ff8c00": "#8a4a00" }[hex] ?? hex)
+    : hex;
 
   // Sticky sidebar content — shown on all tabs
   const SidebarPanel = () => (
@@ -1376,12 +1378,12 @@ export default function Portfolio() {
       <div style={{ maxHeight: drawerOpen ? "640px" : "0px", overflow: "hidden", transition: "max-height 0.35s ease", background: T.navBg, borderBottom: drawerOpen ? `1px solid ${T.navBorder}` : "none" }}>
         <div style={{ padding: "12px 14px 16px", display: "flex", flexDirection: "column", gap: "0px", alignItems: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-            <div style={{ fontSize: "0.48rem", color: `${T.accent}99`, letterSpacing: "0.14em", marginBottom: "2px", fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{rpgMode ? "· CLASS ABILITIES ·" : "· TECHNICAL SKILLS ·"}</div>
+            <div style={{ fontSize: "0.48rem", color: `${T.accent}99`, letterSpacing: "0.14em", marginBottom: "2px", fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{rpgMode ? "· Arcane Disciplines ·" : "· TECHNICAL SKILLS ·"}</div>
             <SpiderChart categories={DATA.skillCategories} lightMode={lightMode} accent={T.accent} rpgMode={rpgMode} title="" maxSkills={Math.max(...DATA.skillCategories.map(c => c.skills.length))} size={180} />
           </div>
           <div style={{ height: "1px", background: `${T.accent}14`, width: "70%", margin: "4px 0" }} />
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-            <div style={{ fontSize: "0.48rem", color: `${T.gold}99`, letterSpacing: "0.14em", marginBottom: "2px", fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{rpgMode ? "· INNATE ABILITIES ·" : "· SOFT SKILLS ·"}</div>
+            <div style={{ fontSize: "0.48rem", color: `${T.gold}99`, letterSpacing: "0.14em", marginBottom: "2px", fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{rpgMode ? "· Passive Enchantments ·" : "· SOFT SKILLS ·"}</div>
             <SpiderChart categories={DATA.innateAbilities} lightMode={lightMode} accent={lightMode ? "#8a6800" : T.gold} rpgMode={rpgMode} title="" maxSkills={6} size={180} />
           </div>
         </div>
@@ -1590,10 +1592,14 @@ export default function Portfolio() {
                           { label: "💼 Seeking Quest", color: T.accent2 },
                           { label: "🌐 Realm-Agnostic", color: T.accent2 },
                           { label: "🤝 Guild-Independent", color: T.accent2 },
+                          { label: "✚ Add to Party", color: lightMode ? "#15803d" : "#22c55e", href: DATA.linkedin },
                           { label: "⚡ Whisper [SOON]", color: T.textMuted, disabled: true },
-                        ].map(t => (
-                          <span key={t.label} style={{ background: t.disabled ? "transparent" : `${t.color}10`, border: `1px solid ${t.disabled ? (lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.08)") : `${t.color}30`}`, borderRadius: 2, padding: "3px 10px", fontSize: "0.55rem", color: t.disabled ? T.textMuted : t.color, fontFamily: "'Exo 2',sans-serif", fontWeight: t.disabled ? 400 : 600, letterSpacing: "0.07em", opacity: t.disabled ? 0.5 : 1, fontStyle: t.disabled ? "italic" : "normal" }}>{t.label}</span>
-                        ))}
+                        ].map(t => {
+                          const tagStyle = { background: t.disabled ? "transparent" : `${t.color}10`, border: `1px solid ${t.disabled ? (lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.08)") : `${t.color}30`}`, borderRadius: 2, padding: "3px 10px", fontSize: "0.55rem", color: t.disabled ? T.textMuted : t.color, fontFamily: "'Exo 2',sans-serif", fontWeight: t.disabled ? 400 : 600, letterSpacing: "0.07em", opacity: t.disabled ? 0.5 : 1, fontStyle: t.disabled ? "italic" : "normal", textDecoration: "none", cursor: t.href ? "pointer" : "default" };
+                          return t.href
+                            ? <a key={t.label} href={t.href} target="_blank" rel="noopener noreferrer" style={tagStyle}>{t.label}</a>
+                            : <span key={t.label} style={tagStyle}>{t.label}</span>;
+                        })}
                       </div>
 
                       {/* Typewriter subtitle */}
@@ -1620,7 +1626,14 @@ export default function Portfolio() {
                       {/* Lore */}
                       <SystemPanel glowColor={T.accent2} lightMode={lightMode} style={{ padding: "16px", marginBottom: "16px" }}>
                         <div style={{ fontSize: "0.5rem", letterSpacing: "0.2em", color: `${T.accent2}88`, marginBottom: "7px" }}>[ LORE ]</div>
-                        <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: T.text, fontWeight: 300 }}>{DATA.rpgSummary}</p>
+                        <p style={{ fontSize: "0.81rem", lineHeight: 1.8, color: T.text, fontWeight: 300, marginBottom: "12px" }}>{DATA.rpgSummary}</p>
+                        <div style={{ borderTop: `1px solid ${T.accent2}18`, paddingTop: "9px" }}>
+                          <div style={{ fontSize: "0.44rem", letterSpacing: "0.18em", color: `${T.accent2}44`, marginBottom: "5px" }}>[ THE ARCANE CRADLE ]</div>
+                          <div style={{ fontSize: "0.6rem", color: T.textMuted, opacity: 0.6, lineHeight: 1.7 }}>
+                            Arcane Scholar · {DATA.education.rpgSchool}
+                            <span style={{ display: "block", color: `${T.gold}77`, fontSize: "0.55rem", marginTop: "2px" }}>{DATA.education.rpgHonors}</span>
+                          </div>
+                        </div>
                       </SystemPanel>
 
                       {/* Stat mini-cards */}
@@ -1638,12 +1651,13 @@ export default function Portfolio() {
                       </div>
 
                       {/* Skill accordions */}
-                      <Accordion label="Class Abilities" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} spells · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
+                      {/* These sections are currently commented out as they are redundant with the new GRIMOIRE page */}
+                      {/* <Accordion label="Arcane Disciplines" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} spells · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
                         <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={rpgMode} />
                       </Accordion>
-                      <Accordion label="Innate Abilities" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} passive traits · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#8a6800" : T.gold} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
+                      <Accordion label="Passive Enchantments" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} passive traits · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#8a6800" : T.gold} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
                         <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={rpgMode} />
-                      </Accordion>
+                      </Accordion> */}
                     </div>
 
                   ) : (
@@ -1659,8 +1673,9 @@ export default function Portfolio() {
                           </h1>
                         </div>
                         <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "6px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
-                        <div style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>📍 {DATA.location} · ✉ {DATA.email} · 🔗 {DATA.linkedin}</div>
-                        <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text }}>{DATA.summary}</p>
+                        <div style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>📍 {DATA.location} · 🔗 <a href={DATA.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>{DATA.linkedin}</a></div>
+                        <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text, marginBottom: "8px" }}>{DATA.summary}</p>
+                        <div style={{ fontSize: "0.7rem", color: T.textMuted, opacity: 0.65 }}>🎓 {DATA.education.degree} · {DATA.education.school} — {DATA.education.honors.join(", ")}</div>
                       </div>
 
                       {/* Stats row */}
@@ -1684,6 +1699,77 @@ export default function Portfolio() {
                 </div>
               )}
 
+              {/* ══ GRIMOIRE / TECH STACK ══ */}
+              {section === "grimoire" && (
+                <div style={sharedContentStyle}>
+                  {rpgMode ? (
+                    <>
+                      <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ TOME OF MASTERY ]</div>
+                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>GRIMOIRE</h2>
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent2},transparent)`, marginBottom: "20px", width: 160 }} />
+
+                      <div style={{ fontSize: "0.44rem", letterSpacing: "0.2em", color: T.textMuted, marginBottom: "8px" }}>[ ARCANE DISCIPLINES ]</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "16px" }}>
+                        {DATA.skillCategories.map((cat, i) => {
+                          const c = skillColor(cat.color);
+                          return (
+                            <SystemPanel key={cat.id} glowColor={c} lightMode={lightMode} style={{ padding: "12px 14px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                              <div style={{ fontSize: "0.44rem", letterSpacing: "0.18em", color: c, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, marginBottom: "8px", textTransform: "uppercase" }}>
+                                {cat.rpgLabel} <span style={{ color: T.textMuted, fontWeight: 400 }}>· {cat.skills.length}</span>
+                              </div>
+                              <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                                {cat.skills.map(s => (
+                                  <span key={s} style={{ background: `${c}10`, border: `1px solid ${c}30`, borderRadius: "3px", padding: "2px 8px", fontSize: "0.58rem", color: lightMode ? T.textStrong : "#c8d8e0", fontFamily: "'Exo 2',sans-serif", fontWeight: 500 }}>{s}</span>
+                                ))}
+                              </div>
+                            </SystemPanel>
+                          );
+                        })}
+                      </div>
+
+                      <div style={{ fontSize: "0.44rem", letterSpacing: "0.2em", color: T.textMuted, marginBottom: "8px" }}>[ PASSIVE ENCHANTMENTS ]</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                        {DATA.innateAbilities.map((ab, i) => {
+                          const c = skillColor(ab.color);
+                          return (
+                            <div key={ab.id} style={{ background: `${c}08`, border: `1px solid ${c}22`, borderRadius: "4px", padding: "10px 12px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                              <div style={{ fontSize: "0.52rem", fontFamily: "'Exo 2',sans-serif", fontWeight: 700, color: c, letterSpacing: "0.1em", marginBottom: "6px", textTransform: "uppercase" }}>{ab.rpgLabel}</div>
+                              <div style={{ fontSize: "0.56rem", color: T.textMuted, lineHeight: 1.8 }}>{ab.skills.slice(0, 3).join(" · ")}{ab.skills.length > 3 ? ` +${ab.skills.length - 3}` : ""}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
+                  ) : (
+                    <CVSection title="Tech Stack" light={lightMode} accent={T.accent}>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "18px" }}>
+                        {DATA.skillCategories.map((cat, i) => (
+                          <div key={cat.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${cat.color},transparent)` }} />
+                            <div style={{ fontSize: "0.68rem", fontWeight: 700, color: T.textMuted, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "10px" }}>{cat.label}</div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                              {cat.skills.map(s => (
+                                <span key={s} style={{ background: `${cat.color}10`, border: `1px solid ${cat.color}30`, borderRadius: "3px", padding: "3px 9px", fontSize: "0.65rem", color: T.textStrong, fontWeight: 500 }}>{s}</span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div style={{ fontSize: "0.7rem", fontWeight: 700, color: T.textMuted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "12px" }}>Core Strengths</div>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                        {DATA.innateAbilities.map((ab, i) => (
+                          <div key={ab.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "12px 14px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                            <div style={{ fontSize: "0.7rem", fontWeight: 600, color: T.textStrong, marginBottom: "5px" }}>{ab.label}</div>
+                            <div style={{ fontSize: "0.62rem", color: T.textMuted, lineHeight: 1.7 }}>{ab.skills.join(" · ")}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </CVSection>
+                  )}
+                </div>
+              )}
+
               {/* ══ GUILDS / EXPERIENCE ══ */}
               {section === "guilds" && (
                 <div style={sharedContentStyle}>
@@ -1697,43 +1783,6 @@ export default function Portfolio() {
                   ) : (
                     <CVSection title="Work Experience" light={lightMode} accent={T.accent}>
                       <GuildSection rpgMode={false} lightMode={lightMode} T={T} />
-                    </CVSection>
-                  )}
-                </div>
-              )}
-
-              {/* ══ ACHIEVEMENTS / CERTS ══ */}
-              {section === "achievements" && (
-                <div style={sharedContentStyle}>
-                  {rpgMode ? (
-                    <>
-                      <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ MILESTONES ]</div>
-                      <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>ACHIEVEMENT <span style={{ color: T.accent }}>LOG</span></h2>
-                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
-                      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "13px" }}>
-                        {DATA.achievements.map((a, i) => (
-                          <div key={i} style={{ background: lightMode ? "rgba(228,234,240,0.95)" : "rgba(6,14,26,0.95)", border: `1px solid ${a.unlocked ? RARITY_COLOR[a.rarity] + "22" : "rgba(128,128,128,0.1)"}`, borderRadius: 4, padding: "18px", position: "relative", overflow: "hidden", opacity: a.unlocked ? 1 : 0.35, filter: a.unlocked ? "none" : "grayscale(0.8)", transition: "all .25s" }}>
-                            {a.unlocked && <div style={{ position: "absolute", top: 9, right: 9, fontSize: "0.5rem", letterSpacing: "0.12em", color: RARITY_COLOR[a.rarity], fontFamily: "'Exo 2',sans-serif", fontWeight: 700 }}>{a.rarity}</div>}
-                            <div style={{ fontSize: "2rem", marginBottom: "10px" }}>{a.icon}</div>
-                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.72rem", color: a.unlocked ? RARITY_COLOR[a.rarity] : T.textMuted, letterSpacing: "0.07em", marginBottom: "6px", textShadow: a.unlocked && !lightMode ? `0 0 7px ${RARITY_COLOR[a.rarity]}` : "none" }}>{a.title}</div>
-                            <div style={{ fontSize: "0.68rem", color: T.text, lineHeight: 1.5, fontWeight: 300 }}>{a.desc}</div>
-                            {a.unlocked && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg,transparent,${RARITY_COLOR[a.rarity]},transparent)` }} />}
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <CVSection title="Certifications & Achievements" light={lightMode} accent={T.accent}>
-                      {DATA.achievements.filter(a => a.unlocked).map((a, i) => (
-                        <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px 20px", marginBottom: "10px", display: "flex", gap: "16px", alignItems: "center", boxShadow: lightMode ? "0 1px 4px rgba(0,0,0,0.04)" : "none" }}>
-                          <div style={{ fontSize: "1.6rem", flexShrink: 0 }}>{a.icon}</div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "3px" }}>{a.cvTitle}</div>
-                            <div style={{ fontSize: "0.75rem", color: T.textMuted }}>{a.desc}</div>
-                          </div>
-                          <span style={{ background: lightMode ? "#f0fdf4" : `${T.accent2}10`, border: `1px solid ${lightMode ? "#86efac" : `${T.accent2}30`}`, borderRadius: "4px", padding: "2px 10px", fontSize: "0.62rem", color: lightMode ? "#16a34a" : T.accent2, fontWeight: 600, whiteSpace: "nowrap" }}>{a.rarity}</span>
-                        </div>
-                      ))}
                     </CVSection>
                   )}
                 </div>
@@ -1798,34 +1847,76 @@ export default function Portfolio() {
                       <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>DISPATCH <span style={{ color: T.accent }}>A RAVEN</span></h2>
                       <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
                       <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "26px" }}>
-                        {[{ l: "TRAVELER IDENTITY", p: "Enter your name..." }, { l: "RAVEN FREQUENCY", p: "your@email.com" }].map(f => (
-                          <div key={f.l} style={{ marginBottom: "16px" }}>
-                            <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
-                            <input placeholder={f.p} style={{ background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                        {formStatus === "success" ? (
+                          <div style={{ textAlign: "center", padding: "32px 0" }}>
+                            <div style={{ fontSize: "2rem", marginBottom: "12px" }}>🪶</div>
+                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontSize: "0.72rem", letterSpacing: "0.2em", color: T.accent, fontWeight: 700 }}>RAVEN DISPATCHED</div>
+                            <div style={{ fontSize: "0.76rem", color: T.textMuted, marginTop: "8px" }}>Your message has been sent. I'll respond shortly.</div>
+                            <button onClick={() => setFormStatus("idle")} style={{ marginTop: "18px", background: "transparent", border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "8px 20px", color: T.textMuted, fontSize: "0.6rem", letterSpacing: "0.12em", cursor: "pointer" }}>▶ SEND ANOTHER</button>
                           </div>
-                        ))}
-                        <div style={{ marginBottom: "22px" }}>
-                          <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
-                          <textarea placeholder="Your message..." style={{ minHeight: 120, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
-                        </div>
-                        <button style={{ background: `${T.accent}10`, border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "11px 28px", color: T.accent, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s" }}>▶ DISPATCH RAVEN</button>
+                        ) : (
+                          <form onSubmit={async e => {
+                            e.preventDefault();
+                            setFormStatus("submitting");
+                            const res = await fetch(FORMSPREE_ENDPOINT, { method: "POST", body: new FormData(e.target), headers: { Accept: "application/json" } });
+                            setFormStatus(res.ok ? "success" : "error");
+                          }}>
+                            <div style={{ marginBottom: "16px" }}>
+                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>TRAVELER IDENTITY</label>
+                              <input name="name" required placeholder="Enter your name..." style={{ width: "100%", boxSizing: "border-box", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                            </div>
+                            <div style={{ marginBottom: "16px" }}>
+                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>RAVEN FREQUENCY</label>
+                              <input name="email" type="email" required placeholder="your@email.com" style={{ width: "100%", boxSizing: "border-box", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                            </div>
+                            <div style={{ marginBottom: "22px" }}>
+                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
+                              <textarea name="message" required placeholder="Your message..." style={{ width: "100%", boxSizing: "border-box", minHeight: 120, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                            </div>
+                            {formStatus === "error" && <div style={{ fontSize: "0.68rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
+                            <button type="submit" disabled={formStatus === "submitting"} style={{ background: `${T.accent}10`, border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "11px 28px", color: T.accent, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
+                              {formStatus === "submitting" ? "DISPATCHING..." : "▶ DISPATCH RAVEN"}
+                            </button>
+                          </form>
+                        )}
                       </SystemPanel>
                     </>
                   ) : (
                     <>
                       <CVSection title="Contact" light={lightMode} accent={T.accent}>
                         <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
-                          {[{ l: "Your Name", p: "Full name" }, { l: "Email Address", p: "your@email.com" }].map(f => (
-                            <div key={f.l} style={{ marginBottom: "16px" }}>
-                              <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>{f.l}</label>
-                              <input placeholder={f.p} style={{ background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                          {formStatus === "success" ? (
+                            <div style={{ textAlign: "center", padding: "24px 0" }}>
+                              <div style={{ fontSize: "2rem", marginBottom: "12px" }}>✉️</div>
+                              <div style={{ fontWeight: 600, color: T.textStrong, marginBottom: "8px" }}>Message sent!</div>
+                              <div style={{ fontSize: "0.82rem", color: T.textMuted }}>Thanks for reaching out — I'll get back to you soon.</div>
+                              <button onClick={() => setFormStatus("idle")} style={{ marginTop: "18px", background: "transparent", border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "8px 20px", color: T.textMuted, fontSize: "0.78rem", cursor: "pointer" }}>Send another</button>
                             </div>
-                          ))}
-                          <div style={{ marginBottom: "22px" }}>
-                            <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
-                            <textarea placeholder="How can I help you?" style={{ minHeight: 120, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
-                          </div>
-                          <button style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s" }}>Send Message</button>
+                          ) : (
+                            <form onSubmit={async e => {
+                              e.preventDefault();
+                              setFormStatus("submitting");
+                              const res = await fetch(FORMSPREE_ENDPOINT, { method: "POST", body: new FormData(e.target), headers: { Accept: "application/json" } });
+                              setFormStatus(res.ok ? "success" : "error");
+                            }}>
+                              <div style={{ marginBottom: "16px" }}>
+                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Your Name</label>
+                                <input name="name" required placeholder="Full name" style={{ width: "100%", boxSizing: "border-box", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                              </div>
+                              <div style={{ marginBottom: "16px" }}>
+                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Email Address</label>
+                                <input name="email" type="email" required placeholder="your@email.com" style={{ width: "100%", boxSizing: "border-box", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                              </div>
+                              <div style={{ marginBottom: "22px" }}>
+                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
+                                <textarea name="message" required placeholder="How can I help you?" style={{ width: "100%", boxSizing: "border-box", minHeight: 120, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                              </div>
+                              {formStatus === "error" && <div style={{ fontSize: "0.78rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
+                              <button type="submit" disabled={formStatus === "submitting"} style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
+                                {formStatus === "submitting" ? "Sending..." : "Send Message"}
+                              </button>
+                            </form>
+                          )}
                         </div>
                       </CVSection>
                     </>
