@@ -1019,11 +1019,11 @@ function WorldRegion({ region, onClick, rpgMode, accent }) {
 
 // ─── SPLASH SCREEN ────────────────────────────────────────────────────────
 const BOOT_LINES = [
-  { text: "> INITIALIZING  SYSTEM_v1.0...", delay: 0.3, color: "#00d4ff" },
-  { text: "> LOADING  HERO_REGISTRY...", delay: 0.85, color: "#b0c8e8" },
-  { text: "> AUTHENTICATING  ARCANE_PROFILE...", delay: 1.4, color: "#b0c8e8" },
-  { text: "> CALIBRATING  SKILL_MATRIX...", delay: 1.95, color: "#b0c8e8" },
-  { text: "> ALL  SYSTEMS  NORMAL", delay: 2.7, color: "#00d4ff" },
+  { text: "> OPENING  DIMENSIONAL  PORTAL...", delay: 0.3, color: "#00d4ff" },
+  { text: "> LORE  UNFOLDING...", delay: 0.85, color: "#b0c8e8" },
+  { text: "> INVOKING  ARCANE  DISCIPLINES...", delay: 1.4, color: "#b0c8e8" },
+  { text: "> CALIBRATING  THE  GRIMOIRE...", delay: 1.95, color: "#b0c8e8" },
+  { text: "> PORTAL  READY  ·  STEP  THROUGH", delay: 2.7, color: "#00d4ff" },
 ];
 
 function SplashScreen({ onDone }) {
@@ -1059,16 +1059,34 @@ function SplashScreen({ onDone }) {
 
       {/* Logo */}
       <div style={{
-        fontSize: "2rem", letterSpacing: "0.5em", color: "#00d4ff",
-        textShadow: "0 0 30px rgba(0,212,255,0.7), 0 0 60px rgba(0,212,255,0.3)",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5em",
         marginBottom: "8px",
         animation: "splashLogoIn 0.6s ease both",
-      }}>⬡ SYSTEM</div>
+      }}>
+        <img
+          src="/emt-logo.svg"
+          alt="EMT"
+          style={{
+            height: "1.8rem",
+            width: "auto",
+            filter: "drop-shadow(0 0 20px rgba(0,212,255,0.8)) drop-shadow(0 0 40px rgba(0,212,255,0.3))",
+          }}
+        />
+        <span style={{
+          fontSize: "2rem",
+          letterSpacing: "0.5em",
+          color: "#00d4ff",
+          textShadow: "0 0 30px rgba(0,212,255,0.7), 0 0 60px rgba(0,212,255,0.3)",
+        }}>PORTALFOLIO</span>
+      </div>
       <div style={{
-        fontSize: "0.42rem", letterSpacing: "0.4em", color: "rgba(0,212,255,0.4)",
+        fontSize: "0.42rem", letterSpacing: "0.3em", color: "rgba(0,212,255,0.55)",
         marginBottom: "40px",
+        fontStyle: "italic",
         animation: "splashLogoIn 0.6s ease 0.15s both",
-      }}>PORTALFOLIO · v1.0</div>
+      }}>crafted by&nbsp;&nbsp;Erwin Tayag</div>
 
       {/* Boot lines */}
       <div style={{ width: "min(480px, 90vw)", marginBottom: "28px" }}>
@@ -1259,13 +1277,16 @@ export default function Portfolio() {
         <div style={{
           position: "absolute", top: 0, left: 0,
           width: 84, height: 84, borderRadius: "50%",
-          background: lightMode
-            ? "linear-gradient(135deg,#d4dde8,#c0cdd8)"
-            : "linear-gradient(135deg,#060e1e,#0a1a30)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: "2.2rem", zIndex: 4,
+          overflow: "hidden",
+          zIndex: 4,
           animation: rpgMode ? "avatarPulse 4s ease-in-out infinite" : "none",
-        }}>🧙</div>
+        }}>
+          <img
+            src="/profile.png"
+            alt="Erwin Tayag"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </div>
       </div>
       {/* Class + badge */}
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
@@ -1335,7 +1356,9 @@ export default function Portfolio() {
               </div>
             </div>
           )}
-          <div style={{ position: "relative", zIndex: 1, width: 36, height: 36, borderRadius: "50%", background: lightMode ? "linear-gradient(135deg,#d4dde8,#c0cdd8)" : "linear-gradient(135deg,#060e1e,#0a1a30)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}>🧙</div>
+          <div style={{ position: "relative", zIndex: 1, width: 36, height: 36, borderRadius: "50%", overflow: "hidden" }}>
+            <img src="/profile.png" alt="Erwin Tayag" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "2px" }}>
@@ -1495,9 +1518,20 @@ export default function Portfolio() {
         {/* NAV */}
         <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
           {/* Logo */}
-          <div style={{ fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif", fontWeight: 800, fontSize: rpgMode ? "0.85rem" : "1rem", letterSpacing: rpgMode ? "0.2em" : "0.02em", color: T.accent, textShadow: rpgMode ? `0 0 12px ${T.accent}88` : "none", whiteSpace: "nowrap" }}>
-            {rpgMode ? "⬡ SYSTEM" : "YN"}
-          </div>
+          <img
+            src="/emt-logo.svg"
+            alt="EMT"
+            style={{
+              height: "28px",
+              width: "auto",
+              filter: lightMode
+                ? "brightness(0)"
+                : rpgMode
+                  ? `drop-shadow(0 0 5px ${T.accent}66)`
+                  : "brightness(0) invert(1)",
+              transition: "filter 0.3s",
+            }}
+          />
 
           {/* Nav items */}
           <div style={{ display: "flex", gap: "2px" }}>
@@ -1592,7 +1626,7 @@ export default function Portfolio() {
                           { label: "🌐 Realm-Agnostic", color: T.accent2 },
                           { label: "🤝 Guild-Independent", color: T.accent2 },
                           { label: "✚ Add to Party", color: lightMode ? "#15803d" : "#22c55e", href: DATA.linkedin },
-                          { label: "⚡ Whisper [SOON]", color: T.textMuted, disabled: true },
+                          { label: "⚡ Whisper", color: T.textMuted, disabled: true },
                         ].map(t => {
                           const tagStyle = { background: t.disabled ? "transparent" : `${t.color}10`, border: `1px solid ${t.disabled ? (lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.08)") : `${t.color}30`}`, borderRadius: 2, padding: "3px 10px", fontSize: "0.55rem", color: t.disabled ? T.textMuted : t.color, fontFamily: "'Exo 2',sans-serif", fontWeight: t.disabled ? 400 : 600, letterSpacing: "0.07em", opacity: t.disabled ? 0.5 : 1, fontStyle: t.disabled ? "italic" : "normal", textDecoration: "none", cursor: t.href ? "pointer" : "default" };
                           return t.href
