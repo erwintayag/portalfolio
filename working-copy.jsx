@@ -1019,12 +1019,11 @@ function WorldRegion({ region, onClick, rpgMode, accent }) {
 
 // ─── SPLASH SCREEN ────────────────────────────────────────────────────────
 const BOOT_LINES = [
-  { text: "> INITIALIZING  SYSTEM_v2.0...", delay: 0.3, color: "#00d4ff" },
+  { text: "> INITIALIZING  SYSTEM_v1.0...", delay: 0.3, color: "#00d4ff" },
   { text: "> LOADING  HERO_REGISTRY...", delay: 0.85, color: "#b0c8e8" },
   { text: "> AUTHENTICATING  ARCANE_PROFILE...", delay: 1.4, color: "#b0c8e8" },
   { text: "> CALIBRATING  SKILL_MATRIX...", delay: 1.95, color: "#b0c8e8" },
-  { text: "> FORGING  CONNECTION  TO  THE  VOID...", delay: 2.35, color: "#b06aff" },
-  { text: "> ALL  SYSTEMS  NOMINAL", delay: 2.7, color: "#00d4ff" },
+  { text: "> ALL  SYSTEMS  NORMAL", delay: 2.7, color: "#00d4ff" },
 ];
 
 function SplashScreen({ onDone }) {
@@ -1069,7 +1068,7 @@ function SplashScreen({ onDone }) {
         fontSize: "0.42rem", letterSpacing: "0.4em", color: "rgba(0,212,255,0.4)",
         marginBottom: "40px",
         animation: "splashLogoIn 0.6s ease 0.15s both",
-      }}>PORTFOLIO · v2.0 · SHADOW DOMAIN EDITION</div>
+      }}>PORTALFOLIO · v1.0</div>
 
       {/* Boot lines */}
       <div style={{ width: "min(480px, 90vw)", marginBottom: "28px" }}>
