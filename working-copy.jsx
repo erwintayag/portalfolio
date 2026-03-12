@@ -1066,7 +1066,7 @@ function SplashScreen({ onDone }) {
         animation: "splashLogoIn 0.6s ease both",
       }}>
         <img
-          src="/emt-logo.svg"
+          src={`${import.meta.env.BASE_URL}emt-logo.svg`}
           alt="EMT"
           style={{
             height: "1.8rem",
@@ -1519,7 +1519,7 @@ export default function Portfolio() {
         <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
           {/* Logo */}
           <img
-            src="/emt-logo.svg"
+            src={`${import.meta.env.BASE_URL}emt-logo.svg`}
             alt="EMT"
             style={{
               height: "28px",
