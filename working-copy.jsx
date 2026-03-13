@@ -1145,6 +1145,8 @@ export default function Portfolio() {
   const [section, setSection] = useState("hero");
   const [selRegion, setSelRegion] = useState(null);
   const [formStatus, setFormStatus] = useState("idle"); // idle | submitting | success | error
+  const [focusedField, setFocusedField] = useState(null);
+  const [hovSubmit, setHovSubmit] = useState(false);
   const { level, xp, totalYears } = useCareerStats();
   const xpAnimated = useCountUp(xp, 1800);
   const subtitle = useTypewriter(DATA.rpgTitle, 46);
@@ -1212,7 +1214,7 @@ export default function Portfolio() {
 
   const nav = rpgMode
     ? [{ id: "hero", label: "CHARACTER" }, { id: "grimoire", label: "GRIMOIRE" }, { id: "guilds", label: "GUILDS" }, { id: "contact", label: "SEND RAVEN" }]
-    : [{ id: "hero", label: "Profile" }, { id: "guilds", label: "Experience" }, { id: "grimoire", label: "Tech Stack" }, { id: "contact", label: "Contact" }];
+    : [{ id: "hero", label: "Profile" }, { id: "grimoire", label: "Tech Stack" }, { id: "guilds", label: "Experience" }, { id: "contact", label: "Contact" }];
 
   const sharedContentStyle = { padding: "24px", animation: "sectionIn 0.4s ease both" };
   const skillColor = (hex) => lightMode
@@ -1298,7 +1300,15 @@ export default function Portfolio() {
             <span style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.62rem", color: T.accent, background: `${T.accent}12`, border: `1px solid ${T.accent}33`, borderRadius: "2px", padding: "1px 5px" }}>LV.{level}</span>
           )}
         </div>
-        <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.82rem", color: T.textStrong, letterSpacing: "0.08em" }}>{DATA.name}</div>
+        <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.82rem", color: T.textStrong, letterSpacing: "0.08em" }}>{DATA.name}
+          &nbsp;
+          {!rpgMode && (
+            <sup style={{
+              fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.62rem", color: T.accent, background:
+                `${T.accent}12`, border: `1px solid ${T.accent}33`, borderRadius: "2px", padding: "1px 5px"
+            }}>🇵🇭</sup>
+          )}
+        </div>
       </div>
 
       {/* RPG: XP bar  ─  Classic: Career Snapshot chips */}
@@ -1313,25 +1323,27 @@ export default function Portfolio() {
           <div style={{ fontSize: "0.42rem", color: T.textMuted, letterSpacing: "0.05em", marginBottom: "14px", textAlign: "right" }}>1 XP = 3.65 days</div>
         </>
       ) : (
-        /* ── Career Snapshot — 3 factual stat chips ── */
-        <div style={{ display: "flex", gap: "6px", marginBottom: "14px", justifyContent: "center" }}>
-          {[
-            { val: `${Math.floor(parseFloat(totalYears))}+`, lbl: "YRS EXP" },
-            { val: `${DATA.guilds.length}`, lbl: "EMPLOYERS" },
-            { val: DATA.primaryStack, lbl: "PRIMARY STACK" },
-          ].map(({ val, lbl }) => (
-            <div key={lbl} style={{
-              flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-              gap: "2px", padding: "7px 4px",
-              background: `${T.accent}08`,
-              border: `1px solid ${T.accent}22`,
-              borderRadius: "4px",
-            }}>
-              <span style={{ fontFamily: T.titleFont, fontWeight: 800, fontSize: "0.72rem", color: T.accent, letterSpacing: "0.02em", lineHeight: 1 }}>{val}</span>
-              <span style={{ fontFamily: T.bodyFont, fontSize: "0.36rem", color: T.textMuted, letterSpacing: "0.08em", textAlign: "center", lineHeight: 1.2 }}>{lbl}</span>
-            </div>
-          ))}
-        </div>
+        <>
+          {/* Career Snapshot — 3 factual stat chips */}
+          <div style={{ display: "flex", gap: "6px", marginBottom: "14px", justifyContent: "center" }}>
+            {[
+              { val: `${Math.floor(parseFloat(totalYears))}+`, lbl: "YRS EXP" },
+              { val: `${DATA.guilds.length}`, lbl: "EMPLOYERS" },
+              { val: DATA.primaryStack, lbl: "PRIMARY STACK" },
+            ].map(({ val, lbl }) => (
+              <div key={lbl} style={{
+                flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+                gap: "2px", padding: "7px 4px",
+                background: `${T.accent}08`,
+                border: `1px solid ${T.accent}22`,
+                borderRadius: "4px",
+              }}>
+                <span style={{ fontFamily: T.titleFont, fontWeight: 800, fontSize: "0.72rem", color: T.accent, letterSpacing: "0.02em", lineHeight: 1 }}>{val}</span>
+                <span style={{ fontFamily: T.bodyFont, fontSize: "0.36rem", color: T.textMuted, letterSpacing: "0.08em", textAlign: "center", lineHeight: 1.2 }}>{lbl}</span>
+              </div>
+            ))}
+          </div>
+        </>
       )}
       {/* Divider */}
       <div style={{ height: 1, background: `linear-gradient(90deg,transparent,${T.accent}33,transparent)`, marginBottom: "10px" }} />
@@ -1365,6 +1377,11 @@ export default function Portfolio() {
             <span style={{ fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont, fontWeight: 700, fontSize: "0.75rem", color: T.textStrong }}>{DATA.name}</span>
             {rpgMode && (
               <span style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.56rem", color: T.accent, background: `${T.accent}12`, border: `1px solid ${T.accent}33`, borderRadius: "2px", padding: "0px 4px" }}>LV.{level}</span>
+            )}
+            {!rpgMode && (
+              <span style={{
+                fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.62rem", color: T.accent, background: `${T.accent}12`, border: `1px solid ${T.accent}33`, borderRadius: "2px", padding: "1px 5px"
+              }}>🇵🇭</span>
             )}
           </div>
           <div style={{ fontSize: "0.6rem", color: `${T.accent}88`, letterSpacing: "0.12em", marginBottom: "3px" }}>{rpgMode ? "FULL-STACK MAGE" : DATA.title.toUpperCase()}</div>
@@ -1500,6 +1517,8 @@ export default function Portfolio() {
         .nav-btn:hover{opacity:1 !important;}
         input,textarea{width:100%;border-radius:4px;outline:none;transition:border-color .2s,box-shadow .2s;font-family:inherit;}
         input::placeholder,textarea::placeholder{opacity:.4;}
+        .raven-cols{display:flex;gap:20px;align-items:flex-start;}
+        @media(max-width:720px){.raven-cols{flex-direction:column;}}
       `}</style>
 
         <ModeTransition active={glitching} isDark={transitionIsDark} toImmersive={transitionToImmersive} />
@@ -1526,9 +1545,7 @@ export default function Portfolio() {
               width: "auto",
               filter: lightMode
                 ? "brightness(0)"
-                : rpgMode
-                  ? `drop-shadow(0 0 5px ${T.accent}66)`
-                  : "brightness(0) invert(1)",
+                : `drop-shadow(0 0 5px ${T.accent}66)`,
               transition: "filter 0.3s",
             }}
           />
@@ -1705,8 +1722,7 @@ export default function Portfolio() {
                             ))}
                           </h1>
                         </div>
-                        <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "6px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
-                        <div style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>📍 {DATA.location} · 🔗 <a href={DATA.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.73rem", color: T.textMuted, marginBottom: "12px" }}>{DATA.linkedin}</a></div>
+                        <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "14px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
                         <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text, marginBottom: "8px" }}>{DATA.summary}</p>
                         <div style={{ fontSize: "0.7rem", color: T.textMuted, opacity: 0.65 }}>🎓 {DATA.education.degree} · {DATA.education.school} — {DATA.education.honors.join(", ")}</div>
                       </div>
@@ -1746,7 +1762,7 @@ export default function Portfolio() {
                         {DATA.skillCategories.map((cat, i) => {
                           const c = skillColor(cat.color);
                           return (
-                            <SystemPanel key={cat.id} glowColor={c} lightMode={lightMode} style={{ padding: "12px 14px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                            <SystemPanel key={cat.id} glowColor={c} lightMode={lightMode} style={{ padding: "12px 14px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`, gridColumn: i === DATA.skillCategories.length - 1 && DATA.skillCategories.length % 2 !== 0 ? "1 / -1" : undefined }}>
                               <div style={{ fontSize: "0.44rem", letterSpacing: "0.18em", color: c, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, marginBottom: "8px", textTransform: "uppercase" }}>
                                 {cat.rpgLabel} <span style={{ color: T.textMuted, fontWeight: 400 }}>· {cat.skills.length}</span>
                               </div>
@@ -1765,7 +1781,7 @@ export default function Portfolio() {
                         {DATA.innateAbilities.map((ab, i) => {
                           const c = skillColor(ab.color);
                           return (
-                            <div key={ab.id} style={{ background: `${c}08`, border: `1px solid ${c}22`, borderRadius: "4px", padding: "10px 12px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                            <div key={ab.id} style={{ background: `${c}08`, border: `1px solid ${c}22`, borderRadius: "4px", padding: "10px 12px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`, gridColumn: i === DATA.innateAbilities.length - 1 && DATA.innateAbilities.length % 2 !== 0 ? "1 / -1" : undefined }}>
                               <div style={{ fontSize: "0.52rem", fontFamily: "'Exo 2',sans-serif", fontWeight: 700, color: c, letterSpacing: "0.1em", marginBottom: "6px", textTransform: "uppercase" }}>{ab.rpgLabel}</div>
                               <div style={{ fontSize: "0.56rem", color: T.textMuted, lineHeight: 1.8 }}>{ab.skills.slice(0, 3).join(" · ")}{ab.skills.length > 3 ? ` +${ab.skills.length - 3}` : ""}</div>
                             </div>
@@ -1777,7 +1793,7 @@ export default function Portfolio() {
                     <CVSection title="Tech Stack" light={lightMode} accent={T.accent}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "18px" }}>
                         {DATA.skillCategories.map((cat, i) => (
-                          <div key={cat.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
+                          <div key={cat.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "16px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`, gridColumn: i === DATA.skillCategories.length - 1 && DATA.skillCategories.length % 2 !== 0 ? "1 / -1" : undefined }}>
                             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${cat.color},transparent)` }} />
                             <div style={{ fontSize: "0.68rem", fontWeight: 700, color: T.textMuted, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: "10px" }}>{cat.label}</div>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
@@ -1791,12 +1807,16 @@ export default function Portfolio() {
 
                       <div style={{ fontSize: "0.7rem", fontWeight: 700, color: T.textMuted, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "12px" }}>Core Strengths</div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-                        {DATA.innateAbilities.map((ab, i) => (
-                          <div key={ab.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "12px 14px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s` }}>
-                            <div style={{ fontSize: "0.7rem", fontWeight: 600, color: T.textStrong, marginBottom: "5px" }}>{ab.label}</div>
-                            <div style={{ fontSize: "0.62rem", color: T.textMuted, lineHeight: 1.7 }}>{ab.skills.join(" · ")}</div>
-                          </div>
-                        ))}
+                        {DATA.innateAbilities.map((ab, i) => {
+                          const c = skillColor(ab.color);
+                          return (
+                            <div key={ab.id} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "12px 14px", position: "relative", overflow: "hidden", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`, gridColumn: i === DATA.innateAbilities.length - 1 && DATA.innateAbilities.length % 2 !== 0 ? "1 / -1" : undefined }}>
+                              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${ab.color},transparent)` }} />
+                              <div style={{ fontSize: "0.7rem", fontWeight: 600, color: c, marginBottom: "5px" }}>{ab.label}</div>
+                              <div style={{ fontSize: "0.62rem", color: T.textMuted, lineHeight: 1.7 }}>{ab.skills.join(" · ")}</div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </CVSection>
                   )}
@@ -1873,59 +1893,60 @@ export default function Portfolio() {
 
               {/* ══ CONTACT ══ */}
               {section === "contact" && (
-                <div style={{ ...sharedContentStyle, maxWidth: "580px" }}>
+                <div style={{ ...sharedContentStyle, maxWidth: "760px" }}>
                   {rpgMode ? (
                     <>
                       <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ COMMUNICATION ]</div>
                       <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>DISPATCH <span style={{ color: T.accent }}>A RAVEN</span></h2>
-                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "28px", width: 180 }} />
+                      <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "12px", width: 180 }} />
+                      <div style={{ fontSize: "0.72rem", color: T.textMuted, fontStyle: "italic", marginBottom: "24px" }}>Send your scroll through the arcane currents. A response shall arrive within one sun cycle.</div>
                       <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "26px" }}>
                         {formStatus === "success" ? (
                           <div style={{ textAlign: "center", padding: "32px 0" }}>
                             <div style={{ fontSize: "2rem", marginBottom: "12px" }}>🪶</div>
                             <div style={{ fontFamily: "'Oxanium',sans-serif", fontSize: "0.72rem", letterSpacing: "0.2em", color: T.accent, fontWeight: 700 }}>RAVEN DISPATCHED</div>
-                            <div style={{ fontSize: "0.76rem", color: T.textMuted, marginTop: "8px" }}>Your message has been sent. I'll respond shortly.</div>
-                            <button onClick={() => setFormStatus("idle")} style={{ marginTop: "18px", background: "transparent", border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "8px 20px", color: T.textMuted, fontSize: "0.6rem", letterSpacing: "0.12em", cursor: "pointer" }}>▶ SEND ANOTHER</button>
+                            <div style={{ fontSize: "0.76rem", color: T.textMuted, marginTop: "8px", marginBottom: "20px" }}>Your scroll rides the arcane winds. Expect a reply within a sun cycle.</div>
+                            <div style={{ borderTop: `1px solid ${T.accent}18`, paddingTop: "14px", marginBottom: "18px" }}>
+                              {[
+                                { label: "⟨ GUILD HALL ⟩", href: DATA.linkedin },
+                                { label: "⟨ FORGE RUNES ⟩", href: DATA.github },
+                              ].map(l => (
+                                <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                                  style={{ display: "block", color: T.accent2, fontSize: "0.65rem", letterSpacing: "0.1em", margin: "6px 0", textDecoration: "none" }}>{l.label}</a>
+                              ))}
+                            </div>
+                            <button onClick={() => setFormStatus("idle")} style={{ background: "transparent", border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "8px 20px", color: T.textMuted, fontSize: "0.6rem", letterSpacing: "0.12em", cursor: "pointer" }}>▶ SEND ANOTHER SCROLL</button>
                           </div>
                         ) : (
-                          <form onSubmit={async e => {
-                            e.preventDefault();
-                            setFormStatus("submitting");
-                            const res = await fetch(FORMSPREE_ENDPOINT, { method: "POST", body: new FormData(e.target), headers: { Accept: "application/json" } });
-                            setFormStatus(res.ok ? "success" : "error");
-                          }}>
-                            <div style={{ marginBottom: "16px" }}>
-                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>TRAVELER IDENTITY</label>
-                              <input name="name" required placeholder="Enter your name..." style={{ width: "100%", boxSizing: "border-box", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
+                          <>
+                            {/* Letterhead header */}
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
+                              <div>
+                                <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "5px 10px", background: "rgba(34,197,94,0.08)", borderRadius: 3 }}>
+                                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e" }} />
+                                  <span style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.12em", color: "#22c55e" }}>AVAILABLE FOR QUESTS</span>
+                                </div>
+                              </div>
+                              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
+
+                                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                                  {[
+                                    { label: "⟨ GUILD HALL ⟩", href: DATA.linkedin },
+                                    { label: "⟨ FORGE RUNES ⟩", href: DATA.github },
+                                  ].map(l => (
+                                    <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                                      style={{ fontSize: "0.58rem", letterSpacing: "0.1em", color: T.accent2, border: `1px solid ${T.accent2}44`, borderRadius: 3, padding: "4px 9px", textDecoration: "none", transition: "border-color 0.2s, color 0.2s" }}
+                                      onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent2; e.currentTarget.style.color = T.accent2; }}
+                                      onMouseLeave={e => { e.currentTarget.style.borderColor = `${T.accent2}44`; e.currentTarget.style.color = T.accent2; }}>
+                                      {l.label} ›
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
-                            <div style={{ marginBottom: "16px" }}>
-                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>RAVEN FREQUENCY</label>
-                              <input name="email" type="email" required placeholder="your@email.com" style={{ width: "100%", boxSizing: "border-box", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
-                            </div>
-                            <div style={{ marginBottom: "22px" }}>
-                              <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
-                              <textarea name="message" required placeholder="Your message..." style={{ width: "100%", boxSizing: "border-box", minHeight: 120, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${T.accent}25`, color: T.text, padding: "10px 13px" }} />
-                            </div>
-                            {formStatus === "error" && <div style={{ fontSize: "0.68rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
-                            <button type="submit" disabled={formStatus === "submitting"} style={{ background: `${T.accent}10`, border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "11px 28px", color: T.accent, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
-                              {formStatus === "submitting" ? "DISPATCHING..." : "▶ DISPATCH RAVEN"}
-                            </button>
-                          </form>
-                        )}
-                      </SystemPanel>
-                    </>
-                  ) : (
-                    <>
-                      <CVSection title="Contact" light={lightMode} accent={T.accent}>
-                        <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
-                          {formStatus === "success" ? (
-                            <div style={{ textAlign: "center", padding: "24px 0" }}>
-                              <div style={{ fontSize: "2rem", marginBottom: "12px" }}>✉️</div>
-                              <div style={{ fontWeight: 600, color: T.textStrong, marginBottom: "8px" }}>Message sent!</div>
-                              <div style={{ fontSize: "0.82rem", color: T.textMuted }}>Thanks for reaching out — I'll get back to you soon.</div>
-                              <button onClick={() => setFormStatus("idle")} style={{ marginTop: "18px", background: "transparent", border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "8px 20px", color: T.textMuted, fontSize: "0.78rem", cursor: "pointer" }}>Send another</button>
-                            </div>
-                          ) : (
+                            {/* Divider */}
+                            <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent} 35%,transparent)`, marginBottom: "22px" }} />
+                            {/* Form */}
                             <form onSubmit={async e => {
                               e.preventDefault();
                               setFormStatus("submitting");
@@ -1933,22 +1954,116 @@ export default function Portfolio() {
                               setFormStatus(res.ok ? "success" : "error");
                             }}>
                               <div style={{ marginBottom: "16px" }}>
-                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Your Name</label>
-                                <input name="name" required placeholder="Full name" style={{ width: "100%", boxSizing: "border-box", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                                <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>TRAVELER IDENTITY</label>
+                                <input name="name" required placeholder="Enter your name..." className="raven-input"
+                                  style={{ background: `${T.accent}06`, border: `1px solid ${focusedField === "rpg-name" ? T.accent : `${T.accent}25`}`, color: T.text, padding: "10px 13px", boxShadow: focusedField === "rpg-name" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                  onFocus={() => setFocusedField("rpg-name")} onBlur={() => setFocusedField(null)} />
                               </div>
                               <div style={{ marginBottom: "16px" }}>
-                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Email Address</label>
-                                <input name="email" type="email" required placeholder="your@email.com" style={{ width: "100%", boxSizing: "border-box", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                                <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>RAVEN FREQUENCY</label>
+                                <input name="email" type="email" required placeholder="your@email.com" className="raven-input"
+                                  style={{ background: `${T.accent}06`, border: `1px solid ${focusedField === "rpg-email" ? T.accent : `${T.accent}25`}`, color: T.text, padding: "10px 13px", boxShadow: focusedField === "rpg-email" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                  onFocus={() => setFocusedField("rpg-email")} onBlur={() => setFocusedField(null)} />
                               </div>
                               <div style={{ marginBottom: "22px" }}>
-                                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
-                                <textarea name="message" required placeholder="How can I help you?" style={{ width: "100%", boxSizing: "border-box", minHeight: 120, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px" }} />
+                                <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>SCROLL CONTENTS</label>
+                                <textarea name="message" required placeholder="Your message..." className="raven-input"
+                                  style={{ minHeight: 140, resize: "vertical", background: `${T.accent}06`, border: `1px solid ${focusedField === "rpg-msg" ? T.accent : `${T.accent}25`}`, color: T.text, padding: "10px 13px", boxShadow: focusedField === "rpg-msg" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                  onFocus={() => setFocusedField("rpg-msg")} onBlur={() => setFocusedField(null)} />
                               </div>
-                              {formStatus === "error" && <div style={{ fontSize: "0.78rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
-                              <button type="submit" disabled={formStatus === "submitting"} style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
-                                {formStatus === "submitting" ? "Sending..." : "Send Message"}
+                              {formStatus === "error" && <div style={{ fontSize: "0.68rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
+                              <button type="submit" disabled={formStatus === "submitting"}
+                                style={{ background: `${T.accent}10`, border: `1px solid ${hovSubmit ? T.accent : `${T.accent}44`}`, borderRadius: 3, padding: "11px 28px", color: hovSubmit ? T.accent : `${T.accent}bb`, fontFamily: "'Oxanium',sans-serif", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1, textShadow: hovSubmit ? `0 0 8px ${T.accent}88` : "none" }}
+                                onMouseEnter={() => setHovSubmit(true)} onMouseLeave={() => setHovSubmit(false)}>
+                                {formStatus === "submitting" ? "DISPATCHING..." : "▶ DISPATCH RAVEN"}
                               </button>
                             </form>
+                          </>
+                        )}
+                      </SystemPanel>
+                    </>
+                  ) : (
+                    <>
+                      <CVSection title="Contact" light={lightMode} accent={T.accent}>
+                        <div style={{ fontSize: "0.86rem", color: T.textMuted, marginBottom: "20px" }}>Open to freelance, contract, and full-time opportunities.</div>
+                        <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "10px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
+                          {formStatus === "success" ? (
+                            <div style={{ textAlign: "center", padding: "24px 0" }}>
+                              <div style={{ fontSize: "2rem", marginBottom: "12px" }}>✉️</div>
+                              <div style={{ fontWeight: 600, color: T.textStrong, marginBottom: "8px" }}>Message sent!</div>
+                              <div style={{ fontSize: "0.82rem", color: T.textMuted, marginBottom: "18px" }}>Thanks for reaching out. I'll get back to you within 1–2 business days.</div>
+                              <div style={{ borderTop: `1px solid ${T.cardBorder}`, paddingTop: "14px", marginBottom: "14px" }}>
+                                {[
+                                  { label: "LinkedIn", href: DATA.linkedin },
+                                  { label: "GitHub", href: DATA.github },
+                                ].map(l => (
+                                  <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                                    style={{ display: "inline-block", color: T.accent, fontSize: "0.78rem", margin: "4px 10px", textDecoration: "none" }}>{l.label}</a>
+                                ))}
+                              </div>
+                              <button onClick={() => setFormStatus("idle")} style={{ background: "transparent", border: `1px solid ${T.cardBorder}`, borderRadius: "6px", padding: "8px 20px", color: T.textMuted, fontSize: "0.78rem", cursor: "pointer" }}>Send another message</button>
+                            </div>
+                          ) : (
+                            <>
+                              {/* Letterhead header */}
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
+                                <div>
+                                  <div style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1rem", color: T.textStrong, marginBottom: "3px" }}>{DATA.name}</div>
+                                  <div style={{ fontSize: "0.76rem", color: T.textMuted }}>{DATA.title}</div>
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
+                                  <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "5px 10px", background: "rgba(34,197,94,0.08)", borderRadius: 5 }}>
+                                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e" }} />
+                                    <span style={{ fontSize: "0.72rem", color: "#22c55e" }}>Open to opportunities</span>
+                                  </div>
+                                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                                    {[
+                                      { icon: "💼", label: "LinkedIn", href: DATA.linkedin },
+                                      { icon: "🐙", label: "GitHub", href: DATA.github },
+                                    ].map(l => (
+                                      <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
+                                        style={{ fontSize: "0.76rem", color: T.accent, border: `1px solid ${T.cardBorder}`, borderRadius: "5px", padding: "4px 10px", textDecoration: "none", transition: "border-color 0.2s, background 0.2s" }}
+                                        onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent; e.currentTarget.style.background = `${T.accent}10`; }}
+                                        onMouseLeave={e => { e.currentTarget.style.borderColor = T.cardBorder; e.currentTarget.style.background = "transparent"; }}>
+                                        {l.icon} {l.label}
+                                      </a>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Divider */}
+                              <div style={{ height: 1, background: lightMode ? "#e2e8f0" : "rgba(96,165,250,0.12)", marginBottom: "22px" }} />
+                              {/* Form */}
+                              <form onSubmit={async e => {
+                                e.preventDefault();
+                                setFormStatus("submitting");
+                                const res = await fetch(FORMSPREE_ENDPOINT, { method: "POST", body: new FormData(e.target), headers: { Accept: "application/json" } });
+                                setFormStatus(res.ok ? "success" : "error");
+                              }}>
+                                <div style={{ marginBottom: "16px" }}>
+                                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Your Name</label>
+                                  <input name="name" required placeholder="Full name" className="raven-input"
+                                    style={{ background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${focusedField === "cv-name" ? T.accent : T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px", boxShadow: focusedField === "cv-name" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                    onFocus={() => setFocusedField("cv-name")} onBlur={() => setFocusedField(null)} />
+                                </div>
+                                <div style={{ marginBottom: "16px" }}>
+                                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Email Address</label>
+                                  <input name="email" type="email" required placeholder="your@email.com" className="raven-input"
+                                    style={{ background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${focusedField === "cv-email" ? T.accent : T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px", boxShadow: focusedField === "cv-email" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                    onFocus={() => setFocusedField("cv-email")} onBlur={() => setFocusedField(null)} />
+                                </div>
+                                <div style={{ marginBottom: "22px" }}>
+                                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 600, color: T.textMuted, marginBottom: "6px" }}>Message</label>
+                                  <textarea name="message" required placeholder="How can I help you?" className="raven-input"
+                                    style={{ minHeight: 140, resize: "vertical", background: lightMode ? "#f8fafc" : "rgba(255,255,255,0.03)", border: `1px solid ${focusedField === "cv-msg" ? T.accent : T.cardBorder}`, color: T.text, padding: "10px 13px", borderRadius: "6px", boxShadow: focusedField === "cv-msg" ? `0 0 0 3px ${T.accent}15` : "none" }}
+                                    onFocus={() => setFocusedField("cv-msg")} onBlur={() => setFocusedField(null)} />
+                                </div>
+                                {formStatus === "error" && <div style={{ fontSize: "0.78rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
+                                <button type="submit" disabled={formStatus === "submitting"} style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
+                                  {formStatus === "submitting" ? "Sending..." : "Send Message"}
+                                </button>
+                              </form>
+                            </>
                           )}
                         </div>
                       </CVSection>
