@@ -1051,6 +1051,10 @@ function SplashScreen({ onDone }) {
         @keyframes bootLineIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
         @keyframes splashBar{from{width:0%;}to{width:100%;}}
         @keyframes splashScan{0%{top:-2px;}100%{top:100%;}}
+        @media (max-width: 480px) {
+          .splash-title { font-size: 1.2rem !important; letter-spacing: 0.25em !important; }
+          .splash-subtitle { font-size: 0.38rem !important; }
+        }
       `}</style>
       {/* Scanlines */}
       <div style={{ position: "absolute", inset: 0, backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.006) 2px, rgba(0,212,255,0.006) 4px)", pointerEvents: "none" }} />
@@ -1059,34 +1063,44 @@ function SplashScreen({ onDone }) {
 
       {/* Logo */}
       <div style={{
+        width: "min(480px, 90vw)",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
-        gap: "0.5em",
-        marginBottom: "8px",
         animation: "splashLogoIn 0.6s ease both",
-      }}>
-        <img
-          src={`${import.meta.env.BASE_URL}emt-logo.svg`}
-          alt="EMT"
-          style={{
-            height: "1.8rem",
-            width: "auto",
-            filter: "drop-shadow(0 0 20px rgba(0,212,255,0.8)) drop-shadow(0 0 40px rgba(0,212,255,0.3))",
-          }}
-        />
-        <span style={{
-          fontSize: "2rem",
-          letterSpacing: "0.5em",
-          color: "#00d4ff",
-          textShadow: "0 0 30px rgba(0,212,255,0.7), 0 0 60px rgba(0,212,255,0.3)",
-        }}>PORTALFOLIO</span>
-      </div>
-      <div style={{
-        fontSize: "0.42rem", letterSpacing: "0.3em", color: "rgba(0,212,255,0.55)",
         marginBottom: "40px",
-        fontStyle: "italic",
-        animation: "splashLogoIn 0.6s ease 0.15s both",
-      }}>crafted by&nbsp;&nbsp;Erwin Tayag</div>
+      }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: "0.5em",
+          marginBottom: "8px",
+          textAlign: "center",
+        }}>
+          <img
+            src={`${import.meta.env.BASE_URL}emt-logo.svg`}
+            alt="EMT"
+            style={{
+              height: "1.8rem",
+              width: "auto",
+              filter: "drop-shadow(0 0 20px rgba(0,212,255,0.8)) drop-shadow(0 0 40px rgba(0,212,255,0.3))",
+            }}
+          />
+          <span className="splash-title" style={{
+            fontSize: "2rem",
+            letterSpacing: "0.5em",
+            color: "#00d4ff",
+            textShadow: "0 0 30px rgba(0,212,255,0.7), 0 0 60px rgba(0,212,255,0.3)",
+          }}>PORTALFOLIO</span>
+        </div>
+        <div className="splash-subtitle" style={{
+          fontSize: "0.42rem", letterSpacing: "0.3em", color: "rgba(0,212,255,0.55)",
+          fontStyle: "italic",
+          animation: "splashLogoIn 0.6s ease 0.15s both",
+        }}>crafted by&nbsp;&nbsp;Erwin Tayag</div>
+      </div>
 
       {/* Boot lines */}
       <div style={{ width: "min(480px, 90vw)", marginBottom: "28px" }}>
@@ -1147,6 +1161,7 @@ export default function Portfolio() {
   const [formStatus, setFormStatus] = useState("idle"); // idle | submitting | success | error
   const [focusedField, setFocusedField] = useState(null);
   const [hovSubmit, setHovSubmit] = useState(false);
+  const [expandedAbilities, setExpandedAbilities] = useState(new Set());
   const { level, xp, totalYears } = useCareerStats();
   const xpAnimated = useCountUp(xp, 1800);
   const subtitle = useTypewriter(DATA.rpgTitle, 46);
@@ -1216,7 +1231,7 @@ export default function Portfolio() {
     ? [{ id: "hero", label: "CHARACTER" }, { id: "grimoire", label: "GRIMOIRE" }, { id: "guilds", label: "GUILDS" }, { id: "contact", label: "SEND RAVEN" }]
     : [{ id: "hero", label: "Profile" }, { id: "grimoire", label: "Tech Stack" }, { id: "guilds", label: "Experience" }, { id: "contact", label: "Contact" }];
 
-  const sharedContentStyle = { padding: "24px", animation: "sectionIn 0.4s ease both" };
+  const sharedContentStyle = { padding: "28px 32px", animation: "sectionIn 0.4s ease both" };
   const skillColor = (hex) => lightMode
     ? ({ "#00d4ff": "#0e5e7a", "#b06aff": "#6b21d0", "#f4c542": "#8a6800", "#ff3356": "#b01030", "#5eead4": "#0d7a6a", "#ff8c00": "#8a4a00" }[hex] ?? hex)
     : hex;
@@ -1294,7 +1309,7 @@ export default function Portfolio() {
       <div style={{ textAlign: "center", marginBottom: "10px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "7px", marginBottom: "3px" }}>
           <span style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.55rem", color: `${T.accent}99`, letterSpacing: "0.16em" }}>
-            {rpgMode ? "FULL-STACK MAGE" : DATA.title.toUpperCase()}
+            {rpgMode ? DATA.rpgTitle.toUpperCase() : DATA.title.toUpperCase()}
           </span>
           {rpgMode && (
             <span style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "0.62rem", color: T.accent, background: `${T.accent}12`, border: `1px solid ${T.accent}33`, borderRadius: "2px", padding: "1px 5px" }}>LV.{level}</span>
@@ -1354,6 +1369,11 @@ export default function Portfolio() {
 
   // Mobile banner state
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   // Mobile banner (portrait / small screens) — compact strip + expandable drawer
   const MobileBanner = () => (
@@ -1384,7 +1404,7 @@ export default function Portfolio() {
               }}>🇵🇭</span>
             )}
           </div>
-          <div style={{ fontSize: "0.6rem", color: `${T.accent}88`, letterSpacing: "0.12em", marginBottom: "3px" }}>{rpgMode ? "FULL-STACK MAGE" : DATA.title.toUpperCase()}</div>
+          <div style={{ fontSize: "0.6rem", color: `${T.accent}88`, letterSpacing: "0.12em", marginBottom: "3px" }}>{rpgMode ? DATA.rpgTitle.toUpperCase() : DATA.title.toUpperCase()}</div>
           {rpgMode ? (
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <div style={{ flex: 1, height: 3, background: `${T.accent}14`, borderRadius: 2, overflow: "hidden", maxWidth: "160px" }}>
@@ -1442,6 +1462,7 @@ export default function Portfolio() {
         <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800;900&family=Oxanium:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{font-size:18px;}
         ::selection{background:rgba(0,212,255,0.2);color:#fff;}
         @keyframes floatP{0%,100%{transform:translateY(0) scale(1);opacity:.4;}50%{transform:translateY(-22px) scale(1.3);opacity:.75;}}
         @keyframes pulseR{0%,100%{transform:scale(1);opacity:.3;}50%{transform:scale(1.4);opacity:0;}}
@@ -1519,6 +1540,15 @@ export default function Portfolio() {
         input::placeholder,textarea::placeholder{opacity:.4;}
         .raven-cols{display:flex;gap:20px;align-items:flex-start;}
         @media(max-width:720px){.raven-cols{flex-direction:column;}}
+        @keyframes menuSlideIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+        .mobile-nav-overlay{display:none;position:fixed;inset:0;z-index:300;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);animation:menuSlideIn 0.22s ease both;}
+        .hamburger-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;border-radius:4px;}
+        @media(max-width:720px){
+          .nav-items-row{display:none !important;}
+          .nav-toggles-row{display:none !important;}
+          .hamburger-btn{display:flex;align-items:center;justify-content:center;}
+          .mobile-nav-overlay{display:flex;flex-direction:column;}
+        }
       `}</style>
 
         <ModeTransition active={glitching} isDark={transitionIsDark} toImmersive={transitionToImmersive} />
@@ -1535,7 +1565,7 @@ export default function Portfolio() {
         }} />
 
         {/* NAV */}
-        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
+        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px", height: "58px", background: T.navBg, borderBottom: `1px solid ${T.navBorder}`, backdropFilter: "blur(16px)", transition: "all 0.3s" }}>
           {/* Logo */}
           <img
             src={`${import.meta.env.BASE_URL}emt-logo.svg`}
@@ -1550,8 +1580,8 @@ export default function Portfolio() {
             }}
           />
 
-          {/* Nav items */}
-          <div style={{ display: "flex", gap: "2px" }}>
+          {/* Nav items — hidden on mobile via CSS */}
+          <div className="nav-items-row" style={{ display: "flex", gap: "2px" }}>
             {nav.map(n => (
               <button key={n.id} className="nav-btn" onClick={() => { setSection(n.id); setSelRegion(null); }} style={{
                 fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif",
@@ -1567,17 +1597,72 @@ export default function Portfolio() {
             ))}
           </div>
 
-          {/* Toggles */}
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          {/* Hamburger — visible only on mobile */}
+          <button
+            className="hamburger-btn"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open navigation"
+            style={{
+              color: T.navActiveColor,
+              fontSize: "1.4rem",
+              border: `1px solid ${T.accent}33`,
+              borderRadius: "4px",
+              background: `${T.accent}09`,
+            }}
+          >☰</button>
+
+          {/* Toggles — hidden on mobile via CSS */}
+          <div className="nav-toggles-row" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
             <ModeToggle rpgMode={rpgMode} setRpgMode={setRpgMode} lightMode={lightMode} setLightMode={setLightMode} triggerGlitch={triggerGlitch} T={T} />
           </div>
+
+          {/* Mobile nav overlay */}
+          {menuOpen && (
+            <div className="mobile-nav-overlay" style={{ background: T.navBg }} onClick={() => setMenuOpen(false)}>
+              <div onClick={e => e.stopPropagation()} style={{ width: "100%", display: "flex", flexDirection: "column", background: T.navBg }}>
+                {/* Header row */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "58px", padding: "0 24px", borderBottom: `1px solid ${T.navBorder}` }}>
+                  <img
+                    src={`${import.meta.env.BASE_URL}emt-logo.svg`}
+                    alt="EMT"
+                    style={{ height: "28px", width: "auto", filter: lightMode ? "brightness(0)" : `drop-shadow(0 0 5px ${T.accent}66)` }}
+                  />
+                  <button onClick={() => setMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", color: T.navActiveColor, fontSize: "1.4rem", padding: "4px 8px" }} aria-label="Close navigation">✕</button>
+                </div>
+                {/* Nav items */}
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {nav.map(n => (
+                    <button key={n.id} onClick={() => { setSection(n.id); setSelRegion(null); setMenuOpen(false); }} style={{
+                      background: "none", border: "none", cursor: "pointer",
+                      minHeight: "56px", padding: "0 32px",
+                      display: "flex", alignItems: "center",
+                      borderLeft: section === n.id ? `3px solid ${T.navActiveColor}` : "3px solid transparent",
+                      fontFamily: rpgMode ? "'Oxanium',sans-serif" : "'DM Sans',sans-serif",
+                      fontSize: rpgMode ? "0.9rem" : "1.05rem",
+                      fontWeight: rpgMode ? 700 : 500,
+                      letterSpacing: rpgMode ? "0.14em" : "0.01em",
+                      color: section === n.id ? T.navActiveColor : T.text,
+                      textTransform: rpgMode ? "uppercase" : "none",
+                      textAlign: "left",
+                    }}>{n.label}</button>
+                  ))}
+                </div>
+                {/* Divider */}
+                <div style={{ height: "1px", background: `linear-gradient(90deg, transparent, ${T.accent}33, transparent)`, margin: "0 24px" }} />
+                {/* Mode toggle */}
+                <div style={{ display: "flex", justifyContent: "center", padding: "20px 24px 32px" }}>
+                  <ModeToggle rpgMode={rpgMode} setRpgMode={setRpgMode} lightMode={lightMode} setLightMode={setLightMode} triggerGlitch={triggerGlitch} T={T} />
+                </div>
+              </div>
+            </div>
+          )}
         </nav>
 
         {/* ── CONTENT ─────────────────────────────── */}
         <main style={{ paddingTop: "58px", minHeight: "100vh", position: "relative", zIndex: 10 }}>
           <style>{`
-          .sidebar-layout { display: flex; gap: 0; max-width: 1240px; margin: 0 auto; }
-          .sidebar-col { width: 300px; flex-shrink: 0; }
+          .sidebar-layout { display: flex; gap: 0; max-width: 1480px; margin: 0 auto; }
+          .sidebar-col { width: 320px; flex-shrink: 0; }
           .sidebar-sticky {
             position: sticky;
             top: 58px;
@@ -1588,7 +1673,7 @@ export default function Portfolio() {
           }
           .sidebar-sticky::-webkit-scrollbar { width: 3px; }
           .sidebar-sticky::-webkit-scrollbar-thumb { background: rgba(120,160,200,0.25); border-radius: 2px; }
-          .content-col { flex: 1; min-width: 0; padding: 24px 20px 40px 4px; }
+          .content-col { flex: 1; min-width: 0; padding: 28px 36px 48px 20px; }
           .mobile-banner { display: none; }
 
           /* Portrait mobile ≤720px: hide sidebar, show banner strip */
@@ -1600,7 +1685,7 @@ export default function Portfolio() {
 
           /* Landscape mobile: sidebar visible, narrower, full scrollable height */
           @media (max-height: 500px) and (orientation: landscape) {
-            .sidebar-col { width: 240px; }
+            .sidebar-col { width: 260px; }
             .sidebar-sticky {
               top: 58px;
               height: calc(100vh - 58px);
@@ -1653,9 +1738,6 @@ export default function Portfolio() {
                       </div>
 
                       {/* Typewriter subtitle */}
-                      <div style={{ minHeight: "1em", marginBottom: "4px" }}>
-                        <span style={{ fontSize: "0.65rem", color: T.accent2, letterSpacing: "0.1em" }}>{subtitle}</span>
-                      </div>
                       <div style={{ fontSize: "0.5rem", letterSpacing: "0.28em", color: T.textMuted, marginBottom: "20px" }}>[ PLAYER PROFILE ]</div>
 
                       {/* Tagline — replaces redundant name heading */}
@@ -1699,15 +1781,6 @@ export default function Portfolio() {
                           </SystemPanel>
                         ))}
                       </div>
-
-                      {/* Skill accordions */}
-                      {/* These sections are currently commented out as they are redundant with the new GRIMOIRE page */}
-                      {/* <Accordion label="Arcane Disciplines" sublabel={`${DATA.skillCategories.reduce((a, c) => a + c.skills.length, 0)} spells · ${DATA.skillCategories.length} disciplines`} accent={T.accent} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
-                        <SkillPills categories={DATA.skillCategories} lightMode={lightMode} T={T} rpgMode={rpgMode} />
-                      </Accordion>
-                      <Accordion label="Passive Enchantments" sublabel={`${DATA.innateAbilities.reduce((a, c) => a + c.skills.length, 0)} passive traits · ${DATA.innateAbilities.length} areas`} accent={lightMode ? "#8a6800" : T.gold} lightMode={lightMode} rpgMode={rpgMode} bg={T.cardBg}>
-                        <SkillPills categories={DATA.innateAbilities} lightMode={lightMode} T={T} rpgMode={rpgMode} />
-                      </Accordion> */}
                     </div>
 
                   ) : (
@@ -1722,9 +1795,12 @@ export default function Portfolio() {
                             ))}
                           </h1>
                         </div>
-                        <div style={{ fontSize: "0.82rem", color: T.accent, fontWeight: 500, marginBottom: "14px" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
+                        <div style={{ display: "flex", flexDirection: "row", marginBottom: "12px", flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline" }}>
+                          <div style={{ display: "inline-block", fontSize: "0.82rem", color: T.accent, fontWeight: 500, flexWrap: "wrap", justifyContent: "flex-start" }}>Senior Developer · {parseFloat(totalYears).toFixed(1)} yrs experience</div>
+                          <div style={{ fontSize: "0.5rem", color: T.textMuted, display: "inline-block", justifyContent: "flex-end" }}>🎓 {DATA.education.degree} · {DATA.education.school} — {DATA.education.honors.join(", ")}</div>
+                        </div>
                         <p style={{ fontSize: "0.82rem", lineHeight: 1.7, color: T.text, marginBottom: "8px" }}>{DATA.summary}</p>
-                        <div style={{ fontSize: "0.7rem", color: T.textMuted, opacity: 0.65 }}>🎓 {DATA.education.degree} · {DATA.education.school} — {DATA.education.honors.join(", ")}</div>
+                        
                       </div>
 
                       {/* Stats row */}
@@ -1780,10 +1856,42 @@ export default function Portfolio() {
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
                         {DATA.innateAbilities.map((ab, i) => {
                           const c = skillColor(ab.color);
+                          const hasMore = ab.skills.length > 3;
+                          const isExpanded = expandedAbilities.has(ab.id);
                           return (
-                            <div key={ab.id} style={{ background: `${c}08`, border: `1px solid ${c}22`, borderRadius: "4px", padding: "10px 12px", animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`, gridColumn: i === DATA.innateAbilities.length - 1 && DATA.innateAbilities.length % 2 !== 0 ? "1 / -1" : undefined }}>
-                              <div style={{ fontSize: "0.52rem", fontFamily: "'Exo 2',sans-serif", fontWeight: 700, color: c, letterSpacing: "0.1em", marginBottom: "6px", textTransform: "uppercase" }}>{ab.rpgLabel}</div>
-                              <div style={{ fontSize: "0.56rem", color: T.textMuted, lineHeight: 1.8 }}>{ab.skills.slice(0, 3).join(" · ")}{ab.skills.length > 3 ? ` +${ab.skills.length - 3}` : ""}</div>
+                            <div
+                              key={ab.id}
+                              onClick={() => {
+                                if (!hasMore) return;
+                                setExpandedAbilities(prev => {
+                                  const next = new Set(prev);
+                                  next.has(ab.id) ? next.delete(ab.id) : next.add(ab.id);
+                                  return next;
+                                });
+                              }}
+                              style={{
+                                background: `${c}08`, border: `1px solid ${isExpanded ? c + "44" : c + "22"}`, borderRadius: "4px", padding: "10px 12px",
+                                animation: "sectionIn 0.38s ease both", animationDelay: `${i * 0.08}s`,
+                                gridColumn: i === DATA.innateAbilities.length - 1 && DATA.innateAbilities.length % 2 !== 0 ? "1 / -1" : undefined,
+                                cursor: hasMore ? "pointer" : "default",
+                                transition: "border-color 0.2s, background 0.2s",
+                              }}
+                            >
+                              <div style={{ fontSize: "0.52rem", fontFamily: "'Exo 2',sans-serif", fontWeight: 700, color: c, letterSpacing: "0.1em", marginBottom: "6px", textTransform: "uppercase", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                {ab.rpgLabel}
+                                {hasMore && !isExpanded && (
+                                  <span style={{
+                                    background: c, color: "#04060e", borderRadius: "999px",
+                                    fontSize: "0.4rem", fontWeight: 800, padding: "1px 5px",
+                                    letterSpacing: "0.04em", lineHeight: 1.6,
+                                    boxShadow: `0 0 6px ${c}99`,
+                                    flexShrink: 0,
+                                  }}>+{ab.skills.length - 3}</span>
+                                )}
+                              </div>
+                              <div style={{ fontSize: "0.56rem", color: T.textMuted, lineHeight: 1.8 }}>
+                                {isExpanded ? ab.skills.join(" · ") : ab.skills.slice(0, 3).join(" · ")}
+                              </div>
                             </div>
                           );
                         })}
@@ -1893,7 +2001,7 @@ export default function Portfolio() {
 
               {/* ══ CONTACT ══ */}
               {section === "contact" && (
-                <div style={{ ...sharedContentStyle, maxWidth: "760px" }}>
+                <div style={{ ...sharedContentStyle, maxWidth: "880px" }}>
                   {rpgMode ? (
                     <>
                       <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ COMMUNICATION ]</div>
@@ -1908,11 +2016,11 @@ export default function Portfolio() {
                             <div style={{ fontSize: "0.76rem", color: T.textMuted, marginTop: "8px", marginBottom: "20px" }}>Your scroll rides the arcane winds. Expect a reply within a sun cycle.</div>
                             <div style={{ borderTop: `1px solid ${T.accent}18`, paddingTop: "14px", marginBottom: "18px" }}>
                               {[
-                                { label: "⟨ GUILD HALL ⟩", href: DATA.linkedin },
-                                { label: "⟨ FORGE RUNES ⟩", href: DATA.github },
+                                { label: "「 GUILD HALL 」", href: DATA.linkedin },
+                                { label: "「 FORGE RUNES 」", href: DATA.github },
                               ].map(l => (
                                 <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
-                                  style={{ display: "block", color: T.accent2, fontSize: "0.65rem", letterSpacing: "0.1em", margin: "6px 0", textDecoration: "none" }}>{l.label}</a>
+                                  style={{ display: "inline-block", color: T.accent2, fontSize: "0.65rem", letterSpacing: "0.1em", margin: "6px 10px", textDecoration: "none" }}>{l.label}</a>
                               ))}
                             </div>
                             <button onClick={() => setFormStatus("idle")} style={{ background: "transparent", border: `1px solid ${T.accent}44`, borderRadius: 3, padding: "8px 20px", color: T.textMuted, fontSize: "0.6rem", letterSpacing: "0.12em", cursor: "pointer" }}>▶ SEND ANOTHER SCROLL</button>
@@ -1928,17 +2036,16 @@ export default function Portfolio() {
                                 </div>
                               </div>
                               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
-
                                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                                   {[
-                                    { label: "⟨ GUILD HALL ⟩", href: DATA.linkedin },
-                                    { label: "⟨ FORGE RUNES ⟩", href: DATA.github },
+                                    { label: "「 GUILD HALL 」", href: DATA.linkedin },
+                                    { label: "「 FORGE RUNES 」", href: DATA.github },
                                   ].map(l => (
                                     <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
                                       style={{ fontSize: "0.58rem", letterSpacing: "0.1em", color: T.accent2, border: `1px solid ${T.accent2}44`, borderRadius: 3, padding: "4px 9px", textDecoration: "none", transition: "border-color 0.2s, color 0.2s" }}
                                       onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent2; e.currentTarget.style.color = T.accent2; }}
                                       onMouseLeave={e => { e.currentTarget.style.borderColor = `${T.accent2}44`; e.currentTarget.style.color = T.accent2; }}>
-                                      {l.label} ›
+                                      {l.label}
                                     </a>
                                   ))}
                                 </div>
@@ -1961,7 +2068,7 @@ export default function Portfolio() {
                               </div>
                               <div style={{ marginBottom: "16px" }}>
                                 <label style={{ display: "block", fontSize: "0.54rem", letterSpacing: "0.18em", color: T.textMuted, marginBottom: "6px" }}>RAVEN FREQUENCY</label>
-                                <input name="email" type="email" required placeholder="your@email.com" className="raven-input"
+                                <input name="email" type="email" required placeholder="herald@yourrealm.net" className="raven-input"
                                   style={{ background: `${T.accent}06`, border: `1px solid ${focusedField === "rpg-email" ? T.accent : `${T.accent}25`}`, color: T.text, padding: "10px 13px", boxShadow: focusedField === "rpg-email" ? `0 0 0 3px ${T.accent}15` : "none" }}
                                   onFocus={() => setFocusedField("rpg-email")} onBlur={() => setFocusedField(null)} />
                               </div>
@@ -1984,7 +2091,7 @@ export default function Portfolio() {
                     </>
                   ) : (
                     <>
-                      <CVSection title="Contact" light={lightMode} accent={T.accent}>
+                      <CVSection title="Write Me A Message" light={lightMode} accent={T.accent}>
                         <div style={{ fontSize: "0.86rem", color: T.textMuted, marginBottom: "20px" }}>Open to freelance, contract, and full-time opportunities.</div>
                         <div style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "10px", padding: "28px", boxShadow: lightMode ? "0 1px 8px rgba(0,0,0,0.06)" : "none" }}>
                           {formStatus === "success" ? (
@@ -2007,15 +2114,13 @@ export default function Portfolio() {
                             <>
                               {/* Letterhead header */}
                               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
-                                <div>
-                                  <div style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1rem", color: T.textStrong, marginBottom: "3px" }}>{DATA.name}</div>
-                                  <div style={{ fontSize: "0.76rem", color: T.textMuted }}>{DATA.title}</div>
-                                </div>
                                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
                                   <div style={{ display: "flex", alignItems: "center", gap: "7px", padding: "5px 10px", background: "rgba(34,197,94,0.08)", borderRadius: 5 }}>
                                     <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e" }} />
-                                    <span style={{ fontSize: "0.72rem", color: "#22c55e" }}>Open to opportunities</span>
+                                    <span style={{ fontSize: "0.72rem", color: "#22c55e" }}>Open to Opportunities</span>
                                   </div>
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
                                   <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                                     {[
                                       { icon: "💼", label: "LinkedIn", href: DATA.linkedin },
@@ -2060,7 +2165,7 @@ export default function Portfolio() {
                                 </div>
                                 {formStatus === "error" && <div style={{ fontSize: "0.78rem", color: T.danger, marginBottom: "12px" }}>Something went wrong. Please try again.</div>}
                                 <button type="submit" disabled={formStatus === "submitting"} style={{ background: T.accent, border: "none", borderRadius: "6px", padding: "11px 28px", color: "#fff", fontFamily: T.titleFont, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "all .22s", opacity: formStatus === "submitting" ? 0.5 : 1 }}>
-                                  {formStatus === "submitting" ? "Sending..." : "Send Message"}
+                                  {formStatus === "submitting" ? "Sending..." : "Send"}
                                 </button>
                               </form>
                             </>
