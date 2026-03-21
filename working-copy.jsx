@@ -1416,7 +1416,7 @@ export default function Portfolio() {
           animation: rpgMode ? "avatarPulse 4s ease-in-out infinite" : "none",
         }}>
           <img
-            src={`${import.meta.env.BASE_URL}profile.png`}
+            src={`${import.meta.env.BASE_URL}${rpgMode ? "profile_rpg.png" : "profile.png"}`}
             alt="Erwin Tayag"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
@@ -1575,7 +1575,7 @@ export default function Portfolio() {
             </div>
           )}
           <div style={{ position: "relative", zIndex: 1, width: 36, height: 36, borderRadius: "50%", overflow: "hidden" }}>
-            <img src={`${import.meta.env.BASE_URL}profile.png`} alt="Erwin Tayag" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src={`${import.meta.env.BASE_URL}${rpgMode ? "profile_rpg.png" : "profile.png"}`} alt="Erwin Tayag" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>

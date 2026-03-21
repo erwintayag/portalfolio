@@ -6,7 +6,7 @@
 
 ## 1. Project Identity
 
-- **Single-file React portfolio**: `working-copy.jsx` (~2,437 lines)
+- **Single-file React portfolio**: `working-copy.jsx` (~2,483 lines)
 - **Two modes**: IMMERSIVE (dark-fantasy RPG) + CLASSIC (clean CV) × dark/light = **4 themes**
 - **Dev server**: `npm run dev` from project root
 - **Deployed**: GitHub Pages via `npm run build` → push `dist/`
@@ -22,6 +22,7 @@
 - **Never break RPG fourth wall** — no real country names, job titles, or "years of experience" in RPG mode; use lore equivalents
 - **Never modify frozen prototype files** (`prototype-alpha.jsx`, `prototype-beta.jsx`)
 - **One file rule**: all components, state, data, and styles live in `working-copy.jsx`
+- **Static assets belong in `public/`** — `dist/` is wiped on every `npm run build`; never put images/SVGs only in `dist/`
 
 ---
 
@@ -35,13 +36,13 @@
 | ~1236–1260 | State declarations (`section`, `rpgMode`, `lightMode`, `glitching`, `selRegion`, `mapScale`, `mapPan`, etc.) |
 | ~1271–1300 | Theme (`T`) object — 4 variants; `triggerGlitch`; `handleSelectRegion` |
 | ~1303–1310 | Nav arrays: `rpgNav[]` + `classicNav[]`; `skillColor()` helper |
-| ~1313–1540 | Sidebar: avatar + name/badge area (`SidebarPanel`) |
-| ~1670–1840 | Desktop + mobile nav rendering + `<style>` block (CSS classes incl. `.realms-layout`) |
-| ~1920–2040 | CHARACTER / Profile section |
-| ~2045–2135 | GRIMOIRE / Tech Stack section |
-| ~2138–2165 | GUILDS / Experience section |
-| ~2167–2330 | REALMS / World Map section (`section === "map"`) — **live in nav** |
-| ~2330–2437 | SEND RAVEN / Contact section + closing JSX, export |
+| ~1356–1533 | Sidebar: `SidebarPanel` — avatar, name/badge, XP/snapshot, spider charts, footer (see §12) |
+| ~1700–1860 | Desktop + mobile nav rendering + `<style>` block (CSS classes incl. `.realms-layout`) |
+| ~1960–2080 | CHARACTER / Profile section |
+| ~2085–2175 | GRIMOIRE / Tech Stack section |
+| ~2178–2205 | GUILDS / Experience section |
+| ~2207–2370 | REALMS / World Map section (`section === "map"`) — **live in nav** |
+| ~2370–2483 | SEND RAVEN / Contact section + closing JSX, export |
 
 ---
 
@@ -182,13 +183,42 @@ function WorldRegion({ region, onClick, rpgMode, accent, gold, isSelected, mapSc
 | `WorldRegion` | ~line 1001 | Map node; props: `isSelected`, `mapScale`; tooltip counter-scales at zoom |
 | `PortalConfirm` | ~line 1034 | Full-screen portal overlay; RPG buttons: `[ I DARE ]` / `[ RETREAT ]` |
 | `SkillPills` | ~line 260 | Renders `skillCategories[]` as coloured pill tags |
-| `SpiderChart` | ~line 40 | SVG radar chart for innate abilities |
+| `SpiderChart` | ~line 40 | SVG radar chart; **viewBox is `-15 -15 230 230`** (expanded to contain axis labels — do NOT add `overflow: visible` back or labels will bleed) |
 | `Accordion` | ~line 180 | Expandable section used in skill lists |
 | `ScanlineOverlay` | ~line 520 | Full-page CRT scanline overlay (RPG dark mode only) |
 
 ---
 
-## 10. Pending Work (priority order)
+## 10. Sidebar Architecture & Overflow Rules
+
+The sticky sidebar panel has specific overflow constraints that were hard-won — do not change them without understanding the chain:
+
+```
+.sidebar-col  (width: 320px, flex-shrink: 0)
+  .sidebar-sticky  (overflow-y: auto, overflow-x: clip  ← NOT hidden; "hidden" gets overridden to "auto" by CSS spec when overflow-y≠visible)
+    SystemPanel  (overflowHidden=true  ← default; provides the hard clip boundary for SVG content)
+      [avatar + rings]       ← rings max 112px diameter, centered in ~248px content — safely within panel
+      [DualSpiderChart]      ← wrapped in overflow:hidden div as belt-and-suspenders
+        SpiderChart (SVG)    ← viewBox="-15 -15 230 230", NO overflow:visible on SVG or containers
+      [Sidebar Footer]       ← see below
+```
+
+### Sidebar Footer content (~line 1487)
+Added below the dual spider charts to fill blank space on large screens. Two blocks:
+
+**RPG mode:**
+- `[ active assignment ]` — green status dot + `DATA.guilds[0].rpgRole` + "ON QUEST" (no real company name)
+- `[ dispatch channels ]` — "Arcane Repository" → `DATA.github`, "Guild Registry" → `DATA.linkedin`
+- Lore tagline strip — `DATA.tagline` in italic
+
+**Classic mode:**
+- `Current Role` — `DATA.guilds[0].role` + `DATA.guilds[0].cvName`
+- `Connect` — "GitHub" → `DATA.github`, "LinkedIn" → `DATA.linkedin`
+- 📍 Location strip — `DATA.location`
+
+---
+
+## 11. Pending Work (priority order)
 
 1. **Guild bullets** — `bullets[]` and `rpgBullets[]` in all 3 guilds are empty arrays; add real content
 2. **Remaining regions** — ids 1, 2, 3, 5 are locked; set `url` when those projects deploy (see §6)
@@ -197,10 +227,10 @@ function WorldRegion({ region, onClick, rpgMode, accent, gold, isSelected, mapSc
 
 ---
 
-## 11. Owner & Deployment
+## 12. Owner & Deployment
 
 - **GitHub**: `erwintayag` (SSH auth confirmed)
 - **Repo**: `github.com/erwintayag/portalfolio`
 - **Deploy**: `npm run build` → commit + push `dist/` (or configure GitHub Actions)
 - **Formspree**: `https://formspree.io/f/xjgawygo` (live, real endpoint)
-- **Profile image**: `public/profile.png` (real photo, used in sidebar avatar + mobile nav)
+- **Profile images**: `public/profile.png` (Classic mode) + `public/profile_rpg.png` (IMMERSIVE mode); `src` is conditional on `rpgMode` at both avatar spots (~lines 1419, 1578)

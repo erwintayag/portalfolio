@@ -1,5 +1,5 @@
 # Portfolio Website — Claude Code Handoff Brief
-_Last updated: March 2026. Written to onboard Claude Code without repeating the full design session._
+_Last updated: March 2026, Session 12. Written to onboard Claude Code without repeating the full design session._
 
 ---
 
@@ -32,10 +32,13 @@ Each mode also has a **light/dark theme toggle**, giving four total combinations
 
 | File | Description |
 |---|---|
-| `portfolio-v1.jsx` | Active working file — always the latest state |
-| `prototype-alpha.jsx` | Frozen early snapshot (~1,390 lines), never modify |
-| `prototype-beta.jsx` | Frozen mid-session snapshot (~1,759 lines), never modify |
-| `CONTEXT.md` | This file |
+| `working-copy.jsx` | Active working file — always the latest state (~2,483 lines) |
+| `prototype-alpha.jsx` | Frozen early snapshot (~1,390 lines), **never modify** |
+| `prototype-beta.jsx` | Frozen mid-session snapshot (~1,759 lines), **never modify** |
+| `public/profile.png` | Real photo — used in CLASSIC mode avatar |
+| `public/profile_rpg.png` | RPG-style portrait — used in IMMERSIVE mode avatar |
+| `.claude/CONTEXT.md` | This file — design rationale and system deep-dives |
+| `.claude/CLAUDE.md` | Session quick-reference — line map, component index, rules |
 
 ---
 
@@ -87,23 +90,29 @@ triggerGlitch(isDark, toImmersive, cb)
 
 ## 5. Navigation & Sections
 
+### Nav order (both modes)
+**IMMERSIVE:** CHARACTER → GRIMOIRE → GUILDS → REALMS → SEND RAVEN
+**CLASSIC:** Profile → Tech Stack → Experience → Projects → Contact
+(section id `"map"` is shared — same component renders for both)
+
 ### RPG mode nav labels → Classic mode equivalents
-| RPG | Classic |
-|---|---|
-| CHARACTER | Profile |
-| GUILDS | Experience |
-| ACHIEVEMENTS | Certifications |
-| WORLD MAP | Projects |
-| SEND RAVEN | Contact |
+| RPG | Classic | Section ID |
+|---|---|---|
+| CHARACTER | Profile | `"hero"` |
+| GRIMOIRE | Tech Stack | `"grimoire"` |
+| GUILDS | Experience | `"guilds"` |
+| REALMS | Projects | `"map"` |
+| SEND RAVEN | Contact | `"contact"` |
 
 ### Section completion status
 | Section | Status |
 |---|---|
 | CHARACTER / Profile | ✅ Complete |
-| GUILDS / Experience | ✅ Complete |
-| ACHIEVEMENTS / Certifications | ⚠️ Implemented, not refined |
-| WORLD MAP / Projects | ⚠️ Implemented, not refined |
-| SEND RAVEN / Contact | ⚠️ Implemented, not refined |
+| GRIMOIRE / Tech Stack | ✅ Complete |
+| GUILDS / Experience | ✅ Complete (bullets filled) |
+| REALMS / Projects | ✅ Complete — two-column map + portal flow |
+| SEND RAVEN / Contact | ✅ Complete — Formspree live |
+| Achievements | ⚠️ Implemented in code, not wired to nav |
 
 ---
 
@@ -152,17 +161,30 @@ DATA = {
 
 ## 7. Sidebar Layout
 
-- **Desktop:** 270px fixed left column, sticky, scrollable
-- **Landscape mobile** (`max-height: 500px`): 220px
+- **Desktop:** **320px** fixed left column, sticky, scrollable
+- **Landscape mobile** (`max-height: 500px`): 260px
 - **Portrait mobile** (`max-width: 720px`): sidebar hidden, `MobileBanner` strip shown instead
 
+### Overflow chain — do NOT change without reading §11
+```
+.sidebar-col  (width:320px, flex-shrink:0)
+  .sidebar-sticky  (overflow-y:auto, overflow-x:clip  ← NOT hidden)
+    SystemPanel  (overflowHidden=true — default)
+      [content]
+        SpiderChart SVG  (viewBox="-15 -15 230 230", no overflow:visible)
+```
+`overflow-x:clip` is required because CSS spec silently promotes `overflow-x:hidden` → `auto` whenever `overflow-y` is non-visible. `clip` is a CSS Level 3 value that creates a true geometric clip without this side-effect.
+
 ### Sidebar contents (same across all tabs)
-1. Arcane avatar (84px circle) with 3 orbiting rings (RPG mode only)
+1. Avatar (84px circle) — **`profile_rpg.png` in IMMERSIVE, `profile.png` in CLASSIC**; 3 orbiting rings in IMMERSIVE only
 2. Class label + name
 3. **RPG mode:** `LV.{n}` badge + EXP bar (`xpFill` CSS animation, `1 XP = 3.65 days`)
-4. **Classic mode:** `{n}Y` badge + 3 Career Snapshot chips (YRS EXP, EMPLOYERS, PRIMARY STACK)
+4. **Classic mode:** 3 Career Snapshot chips (YRS EXP, EMPLOYERS, PRIMARY STACK)
 5. Divider
 6. Dual spider charts (Technical + Soft skills)
+7. **Sidebar footer** — fills blank space on large screens (added Session 12):
+   - RPG: `[ active assignment ]` card (rpgRole, no real company name) + `[ dispatch channels ]` (GitHub/LinkedIn) + lore tagline strip
+   - Classic: `Current Role` card + `Connect` links + 📍 location strip
 
 ### Arcane avatar rings (RPG mode only)
 Three concentric border-only circles, each with an orbiting hotspot dot:
@@ -173,6 +195,12 @@ Three concentric border-only circles, each with an orbiting hotspot dot:
 | RARE (inner) | 86px | `#22c55e` green | `#15803d` | 2400ms | CW |
 
 Avatar container has `margin: "8px auto 30px"` — the 8px top and 30px bottom are intentional to clear ring bleed from panel edges.
+
+Avatar `src` is **conditional on `rpgMode`**:
+```jsx
+src={`${import.meta.env.BASE_URL}${rpgMode ? "profile_rpg.png" : "profile.png"}`}
+```
+Both files live in `public/` so Vite includes them in every build. Never place static assets only in `dist/` — that folder is wiped on every `npm run build`.
 
 ---
 
@@ -185,8 +213,8 @@ Avatar container has `margin: "8px auto 30px"` — the 8px top and 30px bottom a
 | `useCareerStats()` | Reads `DATA.careerStart`, returns `{level, xp, totalYears}` — all dynamic |
 | `useGuildStats(start, end)` | Per-guild XP/level/period hook |
 | `calcGuildStats(start, end)` | Pure function version of above (safe in `.map()`) |
-| `SpiderChart(...)` | Radar chart. VB=200, maxR=44, labelR=65, 8px font, `overflow:visible` |
-| `DualSpiderChart(...)` | Stacked pair: sidebar size=160, drawer size=180 |
+| `SpiderChart(...)` | Radar chart. viewBox=`-15 -15 230 230`, maxR=44, labelR=65, 8px font. **No `overflow:visible`** — viewBox expanded to contain labels. Do NOT add overflow:visible back. |
+| `DualSpiderChart(...)` | Stacked pair of SpiderCharts (Technical + Soft skills). Both use `size=160`. Wrapped in `overflow:hidden` div inside SidebarPanel. |
 | `SplashScreen({ onDone })` | 3s boot sequence on load, self-dismissing |
 | `ModeTransition({ active, isDark, toImmersive })` | Cinematic overlay during mode switch |
 | `ScanlineOverlay` | Fixed CRT scanlines (RPG Dark only) |
@@ -280,7 +308,9 @@ Each theme passes `particleColor` and `particleColor2` from `T` tokens — parti
 ### Things that are deliberately the way they are
 - `triggerGlitch` fires `cb()` at 320ms, not 750ms — prevents white flash by swapping content while overlay covers screen
 - Avatar container `margin: "8px auto 30px"` — the 8px clears the top ring bleed (outer ring is 112px on 84px container = 14px bleed), 30px clears the bottom bleed
-- Spider chart `overflow: "visible"` + container `padding: "0 16px"` — prevents label clipping
+- Spider chart viewBox is `"-15 -15 230 230"` (expanded 15 units each side from original `"0 0 200 200"`) — labels at `labelR=65` extend ~3–13 VB units past the 200-unit boundary; expanding the viewBox contains them without needing `overflow:visible`. Browser HTML `overflow:hidden` does NOT reliably clip SVG `overflow:visible` content — fix must be at the SVG level.
+- `sidebar-sticky` uses `overflow-x: clip` not `overflow-x: hidden` — CSS spec promotes `hidden` to `auto` when `overflow-y` is also set, nullifying it. `clip` creates a true geometric clip independently.
+- `SidebarPanel` uses `SystemPanel` with default `overflowHidden=true` — this is the hard boundary that prevents any SVG overflow from escaping into the main content column.
 - `calcGuildStats` is a pure function wrapper around `useGuildStats` — hooks can't be called inside `.map()`
 - Accordion uses `gridTemplateRows: 0fr→1fr` not `maxHeight` — animates to real content height with no JS measurement
 - Accordion requires `bg={T.cardBg}` prop — without it the grid background bleeds through the transparent panel
@@ -291,13 +321,11 @@ Each theme passes `particleColor` and `particleColor2` from `T` tokens — parti
 
 ## 12. Pending Work (priority order)
 
-1. **Fill real job data** — `bullets[]` and `rpgBullets[]` in all 3 guilds are empty
-2. **Refine Achievements section** — implemented but not polished
-3. **Refine World Map section** — all regions show "Undiscovered", needs real project links
-4. **Refine Send Raven / Contact section** — implemented but not polished
-5. **Whisper feature** — placeholder tag exists (`⚡ Whisper [SOON]`), no implementation
-6. **Real project portals** — World Map regions need actual URLs when projects go live
-7. **Splash screen timing** — currently hardcoded 3s, should eventually tie to real load performance
+1. **Guild bullets** — `bullets[]` and `rpgBullets[]` in all 3 guilds are populated but can be refined further
+2. **Remaining regions** — ids 1, 2, 3, 5 are locked; set `url` in `DATA.regions` when those projects deploy
+3. **Achievements section** — implemented in code, not polished or wired to nav
+4. **Whisper feature** — `⚡ Whisper [SOON]` tag exists in CHARACTER; no backend implementation yet
+5. **Splash screen timing** — currently hardcoded 3s; could tie to real load performance eventually
 
 ---
 
@@ -320,12 +348,13 @@ When writing copy for this site, keep these in mind:
 ## 14. Recommended First Prompt for Claude Code
 
 ```
-Read CONTEXT.md fully before doing anything.
+Read .claude/CLAUDE.md and .claude/CONTEXT.md fully before doing anything.
 
-This is a single-file React portfolio (portfolio-v1.jsx) with no build step.
-It uses inline styles only — no Tailwind, no CSS modules.
-There are two modes (IMMERSIVE/RPG and CLASSIC/CV) and two themes (dark/light) = 4 combinations.
+This is a single-file React portfolio (working-copy.jsx, ~2,483 lines).
+It uses inline React styles only — no Tailwind, no CSS modules, no TypeScript.
+Two modes (IMMERSIVE / CLASSIC) × two themes (dark / light) = 4 combinations.
 All theme values flow through the T token object.
+Static assets (images, SVGs) live in public/ — never place them in dist/.
 
 My next task is: [YOUR TASK HERE]
 ```
