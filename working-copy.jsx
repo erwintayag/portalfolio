@@ -214,15 +214,15 @@ function SpiderChart({ categories, lightMode, accent, rpgMode, title, maxSkills,
   const labelColor = lightMode ? "rgba(0,80,100,0.7)" : `${accent}bb`;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", overflow: "visible" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
       {title && (
         <div style={{ fontSize: "0.44rem", letterSpacing: "0.14em", color: accent, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, marginBottom: "3px", textTransform: "uppercase", opacity: 0.75, textAlign: "center" }}>
           {title}
         </div>
       )}
-      {/* overflow:visible lets text labels render outside the SVG bounding box */}
-      <div style={{ padding: "0 16px", overflow: "visible", width: "100%", display: "flex", justifyContent: "center" }}>
-        <svg width={renderSize} height={renderSize} viewBox={`0 0 ${VB} ${VB}`} style={{ display: "block", overflow: "visible" }}>
+      {/* viewBox expanded by 15 units on all sides so labels stay within SVG viewport — no overflow:visible needed */}
+      <div style={{ padding: "0 16px", width: "100%", display: "flex", justifyContent: "center" }}>
+        <svg width={renderSize} height={renderSize} viewBox="-15 -15 230 230" style={{ display: "block" }}>
           {/* Grid rings */}
           {rings.map((r, ri) => {
             const pts = categories.map((_, i) => point(i, r * maxR));
@@ -1355,7 +1355,7 @@ export default function Portfolio() {
 
   // Sticky sidebar content — shown on all tabs
   const SidebarPanel = () => (
-    <SystemPanel glowColor={T.accent} lightMode={lightMode} overflowHidden={false}
+    <SystemPanel glowColor={T.accent} lightMode={lightMode}
       style={{ padding: "20px 16px", '--glow': `${T.accent}44`, animation: "panelPulse 4s ease-in-out infinite", position: "relative", height: "100%", boxSizing: "border-box" }}>
       <div style={{ position: "absolute", left: 0, right: 0, height: "1px", background: `linear-gradient(90deg,transparent,${T.accent}44,transparent)`, animation: "scanDown 3s linear infinite" }} />
       {/* Avatar — circle with 3 arcane rings */}
@@ -1480,7 +1480,53 @@ export default function Portfolio() {
       {/* Divider */}
       <div style={{ height: 1, background: `linear-gradient(90deg,transparent,${T.accent}33,transparent)`, marginBottom: "10px" }} />
       {/* Dual spider */}
-      <DualSpiderChart skillCategories={DATA.skillCategories} innateAbilities={DATA.innateAbilities} lightMode={lightMode} accent={T.accent} rpgMode={rpgMode} />
+      <div style={{ width: "100%", overflow: "hidden" }}>
+        <DualSpiderChart skillCategories={DATA.skillCategories} innateAbilities={DATA.innateAbilities} lightMode={lightMode} accent={T.accent} rpgMode={rpgMode} />
+      </div>
+
+      {/* ── SIDEBAR FOOTER: Status + Quick Links ── */}
+      <div style={{ height: 1, background: `linear-gradient(90deg,transparent,${T.accent}22,transparent)`, margin: "16px 0 12px" }} />
+
+      {/* Current Assignment / Role */}
+      <div style={{ marginBottom: "12px" }}>
+        <div style={{ fontSize: "0.4rem", letterSpacing: "0.16em", color: `${T.accent}55`, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, textAlign: "center", marginBottom: "8px", textTransform: "uppercase" }}>
+          {rpgMode ? "[ active assignment ]" : "Current Role"}
+        </div>
+        <div style={{ padding: "9px 10px", background: `${T.accent}06`, border: `1px solid ${T.accent}18`, borderRadius: "4px", display: "flex", gap: "8px", alignItems: "flex-start" }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: lightMode ? "#15803d" : "#22c55e", boxShadow: `0 0 5px ${lightMode ? "#15803d88" : "#22c55e88"}`, marginTop: "4px", flexShrink: 0 }} />
+          <div>
+            <div style={{ fontSize: "0.55rem", fontFamily: rpgMode ? "'Oxanium',sans-serif" : T.titleFont, fontWeight: 700, color: T.textStrong, letterSpacing: "0.04em", lineHeight: 1.3 }}>
+              {rpgMode ? DATA.guilds[0].rpgRole.toUpperCase() : DATA.guilds[0].role}
+            </div>
+            <div style={{ fontSize: "0.44rem", color: T.accent, marginTop: "2px", letterSpacing: "0.05em" }}>
+              {rpgMode ? "ON QUEST" : DATA.guilds[0].cvName}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Dispatch Channels / Quick Links */}
+      <div style={{ height: 1, background: `linear-gradient(90deg,transparent,${T.accent}22,transparent)`, marginBottom: "12px" }} />
+      <div style={{ marginBottom: "10px" }}>
+        <div style={{ fontSize: "0.4rem", letterSpacing: "0.16em", color: `${T.accent}55`, fontFamily: "'Exo 2',sans-serif", fontWeight: 700, textAlign: "center", marginBottom: "8px", textTransform: "uppercase" }}>
+          {rpgMode ? "[ dispatch channels ]" : "Connect"}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+          {[
+            { label: rpgMode ? "「 GUILD REGISTRY 」" : "LinkedIn", href: DATA.linkedin },
+            { label: rpgMode ? "「 ARCANE REPOSITORY 」" : "GitHub", href: DATA.github },
+          ].map(({ label, href }) => (
+            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "7px 10px", background: "transparent", border: `1px solid ${T.accent}18`, borderRadius: "3px", fontSize: "0.5rem", color: T.textMuted, fontFamily: rpgMode ? "'Exo 2',sans-serif" : T.bodyFont, letterSpacing: rpgMode ? "0.08em" : "0.02em", textDecoration: "none", transition: "border-color 0.2s, color 0.2s, background 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = `${T.accent}44`; e.currentTarget.style.color = T.accent; e.currentTarget.style.background = `${T.accent}08`; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = `${T.accent}18`; e.currentTarget.style.color = T.textMuted; e.currentTarget.style.background = "transparent"; }}
+            >
+              <span>{label}</span>
+              <span style={{ color: `${T.accent}55`, fontSize: "0.6rem" }}>↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
     </SystemPanel>
   );
 
@@ -1816,7 +1862,7 @@ export default function Portfolio() {
             top: 58px;
             height: calc(100vh - 58px);
             overflow-y: auto;
-            overflow-x: hidden;
+            overflow-x: clip;
             padding: 24px 18px 32px 22px;
           }
           .sidebar-sticky::-webkit-scrollbar { width: 3px; }
@@ -2268,8 +2314,8 @@ export default function Portfolio() {
                             <div style={{ fontSize: "0.76rem", color: T.textMuted, marginTop: "8px", marginBottom: "20px" }}>Your scroll rides the arcane winds. Expect a reply within a sun cycle.</div>
                             <div style={{ borderTop: `1px solid ${T.accent}18`, paddingTop: "14px", marginBottom: "18px" }}>
                               {[
-                                { label: "「 GUILD HALL 」", href: DATA.linkedin },
-                                { label: "「 FORGE RUNES 」", href: DATA.github },
+                                { label: "「 GUILD REGISTRY 」", href: DATA.linkedin },
+                                { label: "「 ARCANE REPOSITORY 」", href: DATA.github },
                               ].map(l => (
                                 <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
                                   style={{ display: "inline-block", color: T.accent2, fontSize: "0.65rem", letterSpacing: "0.1em", margin: "6px 10px", textDecoration: "none" }}>{l.label}</a>
@@ -2290,8 +2336,8 @@ export default function Portfolio() {
                               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "8px" }}>
                                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                                   {[
-                                    { label: "「 GUILD HALL 」", href: DATA.linkedin },
-                                    { label: "「 FORGE RUNES 」", href: DATA.github },
+                                    { label: "「 GUILD REGISTRY 」", href: DATA.linkedin },
+                                    { label: "「 ARCANE REPOSITORY 」", href: DATA.github },
                                   ].map(l => (
                                     <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer"
                                       style={{ fontSize: "0.58rem", letterSpacing: "0.1em", color: T.accent2, border: `1px solid ${T.accent2}44`, borderRadius: 3, padding: "4px 9px", textDecoration: "none", transition: "border-color 0.2s, color 0.2s" }}
