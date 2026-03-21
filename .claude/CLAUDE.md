@@ -6,7 +6,7 @@
 
 ## 1. Project Identity
 
-- **Single-file React portfolio**: `working-copy.jsx` (~2,150 lines)
+- **Single-file React portfolio**: `working-copy.jsx` (~2,437 lines)
 - **Two modes**: IMMERSIVE (dark-fantasy RPG) + CLASSIC (clean CV) × dark/light = **4 themes**
 - **Dev server**: `npm run dev` from project root
 - **Deployed**: GitHub Pages via `npm run build` → push `dist/`
@@ -29,21 +29,19 @@
 
 | Lines | Contents |
 |---|---|
-| 1–1138 | Helper components: `SpiderChart`, `Accordion`, `SkillPills`, `SystemPanel`, `GuildSection`, `CVSection`, `WorldRegion`, `ScanlineOverlay`, `SystemParticles`, `ModeTransition`, `ModeToggle`, `SplashScreen` |
+| 1–1040 | Helper components: `SpiderChart`, `Accordion`, `SkillPills`, `SystemPanel`, `GuildSection`, `CVSection`, `WorldRegion`, `PortalConfirm`, `SplashScreen`, `ScanlineOverlay`, `SystemParticles`, `ModeTransition`, `ModeToggle` |
 | ~126 | `DATA.regions[]` — **portal integration point** (see §6) |
-| 1135 | `FORMSPREE_ENDPOINT` constant |
-| 1139–1157 | State declarations (`section`, `isDark`, `isImmersive`, `glitching`, etc.) |
-| 1165–1213 | Theme (`T`) object — 4 variants |
-| 1216–1217 | Nav arrays: `rpgNav[]` + `classicNav[]` |
-| 1220–1222 | `skillColor()` helper |
-| 1225–1435 | Sidebar: avatar + name/badge area |
-| 1552–1643 | Desktop + mobile nav rendering |
-| 1701–1819 | CHARACTER / Profile section |
-| 1821–1893 | GRIMOIRE / Tech Stack section |
-| 1897–1911 | GUILDS / Experience section |
-| 1915–1962 | World Map / Projects section (`section === "map"`) |
-| 1965–2139 | SEND RAVEN / Contact section |
-| 2140+ | Closing JSX, export |
+| ~1233 | `FORMSPREE_ENDPOINT` constant |
+| ~1236–1260 | State declarations (`section`, `rpgMode`, `lightMode`, `glitching`, `selRegion`, `mapScale`, `mapPan`, etc.) |
+| ~1271–1300 | Theme (`T`) object — 4 variants; `triggerGlitch`; `handleSelectRegion` |
+| ~1303–1310 | Nav arrays: `rpgNav[]` + `classicNav[]`; `skillColor()` helper |
+| ~1313–1540 | Sidebar: avatar + name/badge area (`SidebarPanel`) |
+| ~1670–1840 | Desktop + mobile nav rendering + `<style>` block (CSS classes incl. `.realms-layout`) |
+| ~1920–2040 | CHARACTER / Profile section |
+| ~2045–2135 | GRIMOIRE / Tech Stack section |
+| ~2138–2165 | GUILDS / Experience section |
+| ~2167–2330 | REALMS / World Map section (`section === "map"`) — **live in nav** |
+| ~2330–2437 | SEND RAVEN / Contact section + closing JSX, export |
 
 ---
 
@@ -96,19 +94,19 @@ regions: [
 ]
 ```
 
-When `url` is populated, the UI should automatically unlock:
-- **RPG WorldRegion node**: tooltip changes from "⚠ UNDISCOVERED" → "↗ ENTER REALM"; click opens `url` in new tab
+When `url` is populated, the UI automatically unlocks:
+- **RPG WorldRegion node**: golden diamond + spinning selection ring; tooltip shows no status text (only locked nodes show "⚠ UNDISCOVERED"); detail panel shows "↗ ENTER THE REALM" button
 - **Classic Projects card**: "Coming Soon" badge → "Visit Project →" link button (styled with `T.accent`)
 
-### Current region placeholders
+### Current regions
 
-| id | RPG name | Classic name | Intended use |
+| id | RPG name | Classic name | URL status |
 |---|---|---|---|
-| 1 | The Arcane Forge | Tools & Utilities | Dev tools / utilities |
-| 2 | The Iron Guild | Enterprise Portal | Enterprise / B2B project |
-| 3 | The Ember Sanctum | Creative Lab | Creative / experimental |
-| 4 | The Shadow Market | SaaS Project | SaaS / product |
-| 5 | The Crystal Spire | Open Source | Open source work |
+| 1 | The Arcane Forge | Tools & Utilities | — locked |
+| 2 | The Iron Guild | Enterprise Portal | — locked |
+| 3 | The Ember Sanctum | Creative Lab | — locked |
+| 4 | The Shadow Market | Personal Finance Tracker | ✅ `https://perfintrackerwin.netlify.app` |
+| 5 | The Crystal Spire | Open Source | — locked |
 
 ---
 
@@ -120,65 +118,55 @@ When a new project repo is **deployed and has a live URL**:
 2. Open `working-copy.jsx` and find `DATA.regions` (~line 126)
 3. Pick the region whose `name`/`cvName` best fits the new project (see table above)
 4. Set `url: "https://your-deployed-project.com"` on that region object
-5. Apply the **URL Upgrade Pattern** to `WorldRegion` and the Classic Projects card (see §7)
-6. Test both modes: RPG map node should now say "↗ ENTER REALM"; Classic card should show "Visit Project →"
+5. Test both modes: RPG map node turns gold + spinning ring; Classic card shows "Visit Project →"
+
+No extra code changes needed — the URL unlock pattern is already fully implemented.
 
 ---
 
-## 7. WorldRegion + Classic Card — URL Upgrade Pattern
+## 7. REALMS Section Architecture (implemented)
 
-These changes are **not yet implemented** — apply them when adding the first real URL.
+The REALMS section (`section === "map"`) uses a two-column layout:
 
-### WorldRegion component (~line 1001)
-
-```jsx
-// Before (current)
-function WorldRegion({ region, T, onClick }) {
-  // ...
-  // tooltip hardcoded to "⚠ UNDISCOVERED"
-  // onClick always calls onClick(region)
-}
-
-// After (with URL support)
-function WorldRegion({ region, T, onClick }) {
-  const { url } = region;
-  // In onClick handler:
-  //   if (url) window.open(url, '_blank');
-  //   else onClick(region);  // existing modal/detail behaviour
-  // In tooltip:
-  //   url ? "↗ ENTER REALM" : "⚠ UNDISCOVERED"
-}
+```
+.realms-layout (flex row, gap 16px)
+  .realms-map-col (min(440px, 50%) — map)
+    SystemPanel [aspectRatio: 210/297]
+      inner div [transform: translate+scale, ref=mapInnerRef]
+        ocean bg, SVG mask, WorldRegion nodes
+      zoom controls [position:absolute, bottom-right]
+      scale indicator [position:absolute, bottom-left]
+  .realms-info-col (flex:1 — index / detail)
+    {selRegion ? <detail panel> : <index list>}
 ```
 
-### Classic Projects card (~line 1985)
+**Mobile** (≤768px): `.realms-layout` stacks vertically via media query in `<style>` block.
 
+### `handleSelectRegion(region)` — key function (~line 1279)
+Called by both map node clicks and index item clicks. Sets `selRegion`, zooms map to `TARGET_SCALE=1.2`, and centers pan on the node. Clamped to valid pan bounds.
+
+### `WorldRegion` props
 ```jsx
-// Before (current)
-<div style={{ color: T.accent }}>● Coming Soon</div>
-
-// After (with URL support)
-{r.url
-  ? <a href={r.url} target="_blank" rel="noopener noreferrer"
-       style={{ color: T.accent, textDecoration: "none", fontWeight: 600 }}>
-      Visit Project →
-    </a>
-  : <div style={{ color: T.accent }}>● Coming Soon</div>
-}
+function WorldRegion({ region, onClick, rpgMode, accent, gold, isSelected, mapScale = 1 })
 ```
+- `isSelected` — shows spinning dashed ring + pulsing inner ring
+- `mapScale` — tooltip applies `scale(1/mapScale)` with `transformOrigin:"center bottom"` to counter-scale at any zoom level
+
+### Portal flow (RPG mode)
+1. Click node or index item → `handleSelectRegion` → sets `selRegion`
+2. Index detail panel shows "↗ ENTER THE REALM" button (unlocked regions only)
+3. Button → `setPortalTarget(selRegion)` → `PortalConfirm` overlay
+4. `PortalConfirm` buttons: `[ I DARE ]` (confirm) / `[ RETREAT ]` (cancel)
 
 ---
 
 ## 8. Nav Order
 
-**RPG (IMMERSIVE):** CHARACTER → GRIMOIRE → GUILDS → SEND RAVEN
+**RPG (IMMERSIVE):** CHARACTER → GRIMOIRE → GUILDS → REALMS → SEND RAVEN
 
-**Classic (CLASSIC):** Profile → Tech Stack → Experience → Contact
+**Classic (CLASSIC):** Profile → Tech Stack → Experience → REALMS → Contact
 
-**World Map** (`section === "map"`):
-- Code is preserved at lines ~1915–1962
-- **Hidden from nav arrays** — not in `rpgNav[]` or `classicNav[]`
-- Re-add to both nav arrays when projects are ready to go live
-- Can be accessed programmatically: `setSection("map")`
+**REALMS** (`section === "map"`): now live in both nav arrays.
 
 ---
 
@@ -191,7 +179,8 @@ function WorldRegion({ region, T, onClick }) {
 | `SystemPanel` | ~line 320 | Styled RPG card container with scanline border |
 | `GuildSection` | ~line 410 | RPG experience entry (guild name, rank, dates, bullets) |
 | `CVSection` | ~line 460 | Classic experience entry (company, title, dates, bullets) |
-| `WorldRegion` | ~line 1001 | SVG/div node on World Map; handles click + tooltip |
+| `WorldRegion` | ~line 1001 | Map node; props: `isSelected`, `mapScale`; tooltip counter-scales at zoom |
+| `PortalConfirm` | ~line 1034 | Full-screen portal overlay; RPG buttons: `[ I DARE ]` / `[ RETREAT ]` |
 | `SkillPills` | ~line 260 | Renders `skillCategories[]` as coloured pill tags |
 | `SpiderChart` | ~line 40 | SVG radar chart for innate abilities |
 | `Accordion` | ~line 180 | Expandable section used in skill lists |
@@ -201,8 +190,8 @@ function WorldRegion({ region, T, onClick }) {
 
 ## 10. Pending Work (priority order)
 
-1. **World Map / Projects** — hidden from nav; needs real project URLs before re-enabling (see §6)
-2. **Guild bullets** — `bullets[]` and `rpgBullets[]` in all 3 guilds are empty arrays; add real content
+1. **Guild bullets** — `bullets[]` and `rpgBullets[]` in all 3 guilds are empty arrays; add real content
+2. **Remaining regions** — ids 1, 2, 3, 5 are locked; set `url` when those projects deploy (see §6)
 3. **Achievements section** — implemented in code, not polished or wired to nav
 4. **Whisper feature** — `⚡ Whisper [SOON]` tag exists in CHARACTER tag row; no backend implementation yet
 

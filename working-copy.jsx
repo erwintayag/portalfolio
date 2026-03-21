@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────
 const DATA = {
@@ -124,11 +124,11 @@ const DATA = {
     },
   ],
   regions: [
-    { id: 1, name: "The Arcane Forge", cvName: "Tools & Utilities", desc: "A crafting & developer tools project", x: 20, y: 32 },
-    { id: 2, name: "The Iron Guild", cvName: "Enterprise Portal", desc: "Enterprise solutions portal", x: 50, y: 20 },
-    { id: 3, name: "The Ember Sanctum", cvName: "Creative Lab", desc: "Creative experiments and prototypes", x: 74, y: 38 },
-    { id: 4, name: "The Shadow Market", cvName: "SaaS Project", desc: "SaaS project — coming soon", x: 33, y: 65 },
-    { id: 5, name: "The Crystal Spire", cvName: "Open Source", desc: "Open source contributions", x: 65, y: 68 },
+    { id: 1, name: "The Arcane Forge", cvName: "Tools & Utilities", desc: "A crafting & developer tools project", x: 42, y: 33 },
+    { id: 2, name: "The Iron Guild", cvName: "Enterprise Portal", desc: "Enterprise solutions portal", x: 50, y: 15 },
+    { id: 3, name: "The Ember Sanctum", cvName: "Creative Lab", desc: "Creative experiments and prototypes", x: 63, y: 58 },
+    { id: 4, name: "The Shadow Market", cvName: "Personal Finance Tracker", desc: "A ledger of shadows — track coin flows, manage your vault, and command a configurable realm of personal wealth.", cvDesc: "Full-stack personal finance app built with React, .NET Core & Supabase. Features a configurable dashboard, account management, and transaction history.", x: 71, y: 79, url: "https://perfintrackerwin.netlify.app" },
+    { id: 5, name: "The Crystal Spire", cvName: "Open Source", desc: "Open source contributions", x: 23, y: 52 },
   ],
 };
 
@@ -998,21 +998,113 @@ function ModeToggle({ rpgMode, setRpgMode, lightMode, setLightMode, triggerGlitc
 
 
 // ─── WORLD MAP REGION ─────────────────────────────────────────────────────
-function WorldRegion({ region, onClick, rpgMode, accent }) {
+function WorldRegion({ region, onClick, rpgMode, accent, gold, isSelected, mapScale = 1 }) {
   const [hov, setHov] = useState(false);
   const c = accent || "#00d4ff";
+  const g = gold || "#f4c542";
+  const isUnlocked = !!region.url;
+  const ringColor = isUnlocked ? g : c;
   return (
-    <div style={{ position: "absolute", left: `${region.x}%`, top: `${region.y}%`, transform: "translate(-50%,-50%)", zIndex: 10, cursor: "pointer" }}
+    <div style={{ position: "absolute", left: `${region.x}%`, top: `${region.y}%`, transform: "translate(-50%,-50%)", zIndex: isSelected ? 15 : 10, cursor: "pointer" }}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)} onClick={() => onClick(region)}>
-      <div style={{ position: "absolute", inset: hov ? "-12px" : "-6px", borderRadius: "50%", border: `1px solid ${c}`, opacity: hov ? 0.45 : 0.12, transition: "all 0.28s", animation: "pulseR 2.5s ease-in-out infinite" }} />
-      <div style={{ width: hov ? 17 : 11, height: hov ? 17 : 11, borderRadius: "50%", background: hov ? `radial-gradient(circle,#fff,${c})` : `radial-gradient(circle,${c},#003030)`, boxShadow: hov ? `0 0 18px ${c},0 0 36px ${c}66` : `0 0 7px ${c}77`, border: `1px solid ${c}`, transition: "all 0.22s", position: "relative", zIndex: 2 }} />
+      {/* Selection indicators: rotating dashed outer ring + pulsing inner ring */}
+      {isSelected && (
+        <div style={{ position: "absolute", inset: -22, borderRadius: "50%", border: `1.5px dashed ${ringColor}`, opacity: 0.85, animation: "spin 3s linear infinite", pointerEvents: "none" }} />
+      )}
+      {isSelected && (
+        <div style={{ position: "absolute", inset: -14, borderRadius: "50%", border: `1px solid ${ringColor}66`, animation: "pulseR 1.5s ease-in-out infinite", pointerEvents: "none" }} />
+      )}
+      {isUnlocked ? (
+        <>
+          {/* Unlocked: pulsing ring + diamond core */}
+          <div style={{ position: "absolute", inset: hov || isSelected ? "-14px" : "-8px", borderRadius: "50%", border: `1px solid ${g}`, opacity: hov || isSelected ? 0.7 : 0.35, transition: "all 0.28s", animation: "pulseR 2s ease-in-out infinite" }} />
+          <div style={{ width: hov || isSelected ? 18 : 13, height: hov || isSelected ? 18 : 13, background: hov || isSelected ? `radial-gradient(circle,#fff,${g})` : `radial-gradient(circle,${g},${g}88)`, boxShadow: hov || isSelected ? `0 0 20px ${g},0 0 40px ${g}55` : `0 0 10px ${g}88`, border: `1.5px solid ${g}`, transform: "rotate(45deg)", transition: "all 0.22s", position: "relative", zIndex: 2 }} />
+        </>
+      ) : (
+        /* Locked: muted circle with slow subtle pulse */
+        <>
+          <div style={{ position: "absolute", inset: hov ? "-10px" : "-6px", borderRadius: "50%", border: `1px solid ${c}44`, opacity: hov || isSelected ? 0.5 : 0.2, transition: "all 0.28s", animation: "pulseR 4s ease-in-out infinite" }} />
+          <div style={{ width: hov || isSelected ? 15 : 13, height: hov || isSelected ? 15 : 13, borderRadius: "50%", background: isSelected ? `${c}33` : `${c}18`, border: `1.5px solid ${isSelected ? c : c + "88"}`, boxShadow: hov || isSelected ? `0 0 10px ${c}66` : `0 0 4px ${c}44`, transition: "all 0.22s", position: "relative", zIndex: 2, opacity: hov || isSelected ? 1 : 0.65 }} />
+        </>
+      )}
       {hov && (
-        <div style={{ position: "absolute", bottom: "calc(100% + 12px)", left: "50%", transform: "translateX(-50%)", background: "rgba(2,8,12,0.97)", border: `1px solid ${c}33`, borderRadius: "3px", padding: "9px 13px", whiteSpace: "nowrap", zIndex: 20, boxShadow: `0 0 16px ${c}18`, animation: "fadeUp 0.15s ease" }}>
-          <div style={{ fontFamily: "'Exo 2',sans-serif", fontWeight: 700, fontSize: "0.68rem", color: c, letterSpacing: "0.1em", marginBottom: "2px" }}>{rpgMode ? region.name : region.cvName}</div>
-          <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.58rem", color: "rgba(180,210,220,0.55)" }}>⚠ UNDISCOVERED</div>
+        <div style={{ position: "absolute", bottom: "calc(100% + 12px)", left: "50%", transform: `translateX(-50%) scale(${1 / mapScale})`, transformOrigin: "center bottom", background: "rgba(2,8,12,0.97)", border: `1px solid ${c}33`, borderRadius: "3px", padding: "9px 13px", whiteSpace: "nowrap", zIndex: 20, boxShadow: `0 0 16px ${c}18`, animation: "tooltipFade 0.15s ease" }}>
+          <div style={{ fontFamily: "'Exo 2',sans-serif", fontWeight: 700, fontSize: "0.68rem", color: isUnlocked ? c : `${c}88`, letterSpacing: "0.1em", marginBottom: "2px" }}>{rpgMode ? region.name : region.cvName}</div>
+          {!isUnlocked && <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.58rem", color: "rgba(180,210,220,0.45)" }}>⚠ UNDISCOVERED</div>}
           <div style={{ position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)", borderLeft: "4px solid transparent", borderRight: "4px solid transparent", borderTop: `4px solid ${c}33` }} />
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── PORTAL CONFIRM ───────────────────────────────────────────────────────
+function PortalConfirm({ region, rpgMode, isDark, T, onCancel }) {
+  const [phase, setPhase] = useState("confirm"); // "confirm" | "exiting"
+  const c = T.accent;
+  const rings = [...Array(4)].map((_, i) => ({ delay: 0.05 + i * 0.06, size: 60 + i * 100 }));
+
+  const handleEnter = () => {
+    setPhase("exiting");
+    setTimeout(() => { window.location.href = region.url; }, 750);
+  };
+
+  if (phase === "exiting") {
+    const bg = isDark
+      ? "radial-gradient(ellipse 80% 80% at 50% 50%, #040e1c 0%, #060c16 50%, rgba(0,212,255,0.08) 100%)"
+      : "radial-gradient(ellipse 80% 80% at 50% 50%, #f0f4ff 0%, #eceef8 50%, rgba(37,99,235,0.08) 100%)";
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 9998, overflow: "hidden", animation: "portalExit 0.8s cubic-bezier(0.7,0,0.3,1) both", background: bg }}>
+        {rings.map((r, i) => (
+          <div key={i} style={{ position: "absolute", top: "50%", left: "50%", width: r.size, height: r.size, marginTop: -r.size / 2, marginLeft: -r.size / 2, borderRadius: "50%", border: `1px solid ${c}${isDark ? "33" : "22"}`, animation: "smokeRing 0.8s ease-out both", animationDelay: `${r.delay}s` }} />
+        ))}
+        <div style={{ position: "absolute", top: "50%", left: "50%", width: 70, height: 70, marginTop: -35, marginLeft: -35, borderRadius: "50%", background: isDark ? `radial-gradient(circle, rgba(0,212,255,0.7) 0%, rgba(176,106,255,0.4) 50%, transparent 100%)` : `radial-gradient(circle, rgba(37,99,235,0.5) 0%, rgba(124,58,237,0.25) 50%, transparent 100%)`, animation: "centerOrb 0.8s ease both", filter: "blur(6px)" }} />
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "0.7rem", letterSpacing: "0.4em", color: c, textShadow: `0 0 20px ${c}`, animation: "monarchText 0.8s ease both", textTransform: "uppercase" }}>
+            {rpgMode ? "ENTERING THE REALM" : "REDIRECTING..."}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (rpgMode) {
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 9998, background: isDark ? "radial-gradient(ellipse 70% 70% at 50% 50%, #040e1c 0%, #060c16 60%, rgba(4,8,20,0.98) 100%)" : "radial-gradient(ellipse 70% 70% at 50% 50%, #f0f4ff 0%, #eceef8 60%, rgba(240,244,255,0.98) 100%)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "18px" }}>
+        {rings.map((r, i) => (
+          <div key={i} style={{ position: "absolute", top: "50%", left: "50%", width: r.size, height: r.size, marginTop: -r.size / 2, marginLeft: -r.size / 2, borderRadius: "50%", border: `1px solid ${c}${isDark ? "22" : "18"}`, animation: "pulseR 2.5s ease-in-out infinite", animationDelay: `${r.delay}s` }} />
+        ))}
+        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", padding: "0 24px", textAlign: "center", maxWidth: 420 }}>
+          <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.5rem", letterSpacing: "0.35em", color: `${c}88`, marginBottom: "2px" }}>[ DIMENSIONAL RIFT DETECTED ]</div>
+          <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "1.1rem", letterSpacing: "0.18em", color: c, textShadow: `0 0 24px ${c}88`, textTransform: "uppercase" }}>{region.name}</div>
+          <div style={{ height: 1, width: 180, background: `linear-gradient(90deg,transparent,${c},transparent)` }} />
+          <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.68rem", color: T.textMuted, lineHeight: 1.7, fontWeight: 300 }}>{region.desc}</div>
+          <div style={{ fontFamily: "'Exo 2',sans-serif", fontSize: "0.55rem", letterSpacing: "0.12em", color: `${c}99`, marginTop: "4px" }}>A portal stands open. Do you dare to cross?</div>
+          <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
+            <div onClick={handleEnter} style={{ fontFamily: "'Oxanium',sans-serif", fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.18em", color: isDark ? "#060c16" : "#fff", background: c, border: `1px solid ${c}`, borderRadius: "3px", padding: "9px 18px", cursor: "pointer", textTransform: "uppercase", boxShadow: `0 0 18px ${c}55` }}>[ I DARE ]</div>
+            <div onClick={onCancel} style={{ fontFamily: "'Oxanium',sans-serif", fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.18em", color: T.textMuted, background: "transparent", border: `1px solid ${T.textMuted}44`, borderRadius: "3px", padding: "9px 18px", cursor: "pointer", textTransform: "uppercase" }}>[ RETREAT ]</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Classic mode
+  const cardBg = isDark ? "rgba(15,23,42,0.97)" : "#ffffff";
+  const cardBorder = isDark ? "rgba(37,99,235,0.25)" : "#e2e8f0";
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 9998, background: isDark ? "rgba(2,6,20,0.88)" : "rgba(240,244,255,0.88)", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}>
+      <div style={{ background: cardBg, border: `1px solid ${cardBorder}`, borderRadius: "10px", padding: "32px 36px", maxWidth: 420, width: "90%", boxShadow: isDark ? `0 8px 40px rgba(0,0,0,0.6)` : "0 8px 40px rgba(0,0,0,0.12)" }}>
+        <div style={{ fontFamily: T.titleFont, fontWeight: 700, fontSize: "1rem", color: T.textStrong, marginBottom: "6px" }}>Leaving Portalfolio</div>
+        <div style={{ height: 1, background: cardBorder, marginBottom: "16px" }} />
+        <div style={{ fontFamily: T.bodyFont, fontSize: "0.72rem", color: T.textMuted, marginBottom: "4px" }}>You are about to visit:</div>
+        <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.9rem", color: c, marginBottom: "8px" }}>{region.cvName}</div>
+        <div style={{ fontFamily: T.bodyFont, fontSize: "0.72rem", color: T.textMuted, lineHeight: 1.65, marginBottom: "22px" }}>{region.cvDesc || region.desc}</div>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <div onClick={handleEnter} style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.75rem", color: "#fff", background: c, borderRadius: "5px", padding: "9px 20px", cursor: "pointer" }}>Visit Project</div>
+          <div onClick={onCancel} style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.75rem", color: T.textMuted, background: "transparent", border: `1px solid ${cardBorder}`, borderRadius: "5px", padding: "9px 20px", cursor: "pointer" }}>Cancel</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1158,6 +1250,13 @@ export default function Portfolio() {
   const [transitionToImmersive, setTransitionToImmersive] = useState(true);
   const [section, setSection] = useState("hero");
   const [selRegion, setSelRegion] = useState(null);
+  const [portalTarget, setPortalTarget] = useState(null);
+  const mapContainerRef = useRef(null);
+  const mapInnerRef = useRef(null);
+  const [mapScale, setMapScale] = useState(1);
+  const [mapPan, setMapPan] = useState({ x: 0, y: 0 });
+  const [mapDragging, setMapDragging] = useState(false);
+  const [mapDragStart, setMapDragStart] = useState({ x: 0, y: 0 });
   const [formStatus, setFormStatus] = useState("idle"); // idle | submitting | success | error
   const [focusedField, setFocusedField] = useState(null);
   const [hovSubmit, setHovSubmit] = useState(false);
@@ -1176,6 +1275,24 @@ export default function Portfolio() {
     // Remove overlay component only after its closing animation completes at 750ms.
     setTimeout(() => { setGlitching(false); }, 750);
   }, []);
+
+  const handleSelectRegion = (region) => {
+    setSelRegion(region);
+    const TARGET_SCALE = 2.5;
+    const W = mapContainerRef.current?.clientWidth ?? 440;
+    const H = mapContainerRef.current?.clientHeight ?? 622;
+    const nodeX = region.x / 100 * W;
+    const nodeY = region.y / 100 * H;
+    const rawPanX = (W / 2 - nodeX) * TARGET_SCALE;
+    const rawPanY = H / 2 - nodeY * TARGET_SCALE;
+    const maxX = (TARGET_SCALE - 1) * W / 2;
+    const maxY = (TARGET_SCALE - 1) * H;
+    setMapScale(TARGET_SCALE);
+    setMapPan({
+      x: Math.max(-maxX, Math.min(maxX, rawPanX)),
+      y: Math.max(-maxY, Math.min(0, rawPanY)),
+    });
+  };
 
   const T = rpgMode && !lightMode ? {
     // ── RPG DARK — "Void Arcane" ──
@@ -1228,8 +1345,8 @@ export default function Portfolio() {
   };
 
   const nav = rpgMode
-    ? [{ id: "hero", label: "CHARACTER" }, { id: "grimoire", label: "GRIMOIRE" }, { id: "guilds", label: "GUILDS" }, { id: "contact", label: "SEND RAVEN" }]
-    : [{ id: "hero", label: "Profile" }, { id: "grimoire", label: "Tech Stack" }, { id: "guilds", label: "Experience" }, { id: "contact", label: "Contact" }];
+    ? [{ id: "hero", label: "CHARACTER" }, { id: "grimoire", label: "GRIMOIRE" }, { id: "guilds", label: "GUILDS" }, { id: "map", label: "REALMS" }, { id: "contact", label: "SEND RAVEN" }]
+    : [{ id: "hero", label: "Profile" }, { id: "grimoire", label: "Tech Stack" }, { id: "guilds", label: "Experience" }, { id: "map", label: "Projects" }, { id: "contact", label: "Contact" }];
 
   const sharedContentStyle = { padding: "28px 32px", animation: "sectionIn 0.4s ease both" };
   const skillColor = (hex) => lightMode
@@ -1239,7 +1356,7 @@ export default function Portfolio() {
   // Sticky sidebar content — shown on all tabs
   const SidebarPanel = () => (
     <SystemPanel glowColor={T.accent} lightMode={lightMode} overflowHidden={false}
-      style={{ padding: "20px 16px", '--glow': `${T.accent}44`, animation: "panelPulse 4s ease-in-out infinite", position: "relative" }}>
+      style={{ padding: "20px 16px", '--glow': `${T.accent}44`, animation: "panelPulse 4s ease-in-out infinite", position: "relative", height: "100%", boxSizing: "border-box" }}>
       <div style={{ position: "absolute", left: 0, right: 0, height: "1px", background: `linear-gradient(90deg,transparent,${T.accent}44,transparent)`, animation: "scanDown 3s linear infinite" }} />
       {/* Avatar — circle with 3 arcane rings */}
       <div style={{ position: "relative", width: 84, height: 84, margin: "8px auto 30px" }}>
@@ -1375,6 +1492,29 @@ export default function Portfolio() {
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
+  useEffect(() => {
+    const el = mapInnerRef.current;
+    if (!el) return;
+    const onWheel = e => {
+      e.preventDefault();
+      setMapScale(s => {
+        const next = Math.max(1, Math.min(4, s - e.deltaY * 0.001));
+        if (next === 1) {
+          setMapPan({ x: 0, y: 0 });
+        } else {
+          const W = mapContainerRef.current?.clientWidth ?? 360;
+          const H = mapContainerRef.current?.clientHeight ?? 509;
+          const maxX = (next - 1) * W / 2;
+          const maxY = (next - 1) * H;
+          setMapPan(p => ({ x: Math.max(-maxX, Math.min(maxX, p.x)), y: Math.max(-maxY, Math.min(0, p.y)) }));
+        }
+        return next;
+      });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [section]);
+
   // Mobile banner (portrait / small screens) — compact strip + expandable drawer
   const MobileBanner = () => (
     <div style={{ position: "sticky", top: "58px", zIndex: 150, backdropFilter: "blur(16px)" }}>
@@ -1478,11 +1618,18 @@ export default function Portfolio() {
           50%    { opacity: var(--p-op, 0.7); transform: scale(1.6); }
         }
         @keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(5px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+        @keyframes tooltipFade{from{opacity:0;}to{opacity:1;}}
         @keyframes sectionIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
         @keyframes scanDown{0%{top:0;opacity:.7;}100%{top:100%;opacity:0;}}
         @keyframes bootLine{from{width:0;}to{width:100%;}}
         @keyframes panelPulse{0%,100%{box-shadow:0 0 10px var(--glow,rgba(0,212,255,.12));}50%{box-shadow:0 0 28px var(--glow,rgba(0,212,255,.4)),0 0 50px var(--glow,rgba(0,212,255,.18));}}
+        @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
+        /* ── Portal Exit ── */
+        @keyframes portalExit{
+          0%{clip-path:circle(0% at 50% 50%);opacity:1;}
+          100%{clip-path:circle(150% at 50% 50%);opacity:1;}
+        }
         /* ── Shadow Domain Transition ── */
         @keyframes shadowDomainVoid{
           0%{clip-path:circle(0% at 50% 50%);opacity:1;}
@@ -1552,6 +1699,7 @@ export default function Portfolio() {
       `}</style>
 
         <ModeTransition active={glitching} isDark={transitionIsDark} toImmersive={transitionToImmersive} />
+        {portalTarget && <PortalConfirm region={portalTarget} rpgMode={rpgMode} isDark={!lightMode} T={T} onCancel={() => setPortalTarget(null)} />}
         {T.scanline && <ScanlineOverlay />}
         {T.particleOpacity > 0 && <SystemParticles opacity={T.particleOpacity} color={T.particleColor} color2={T.particleColor2} />}
 
@@ -1695,6 +1843,15 @@ export default function Portfolio() {
             }
             .content-col { padding: 12px 14px 40px 4px; }
             .mobile-banner { display: none !important; }
+          }
+
+          /* REALMS two-column layout */
+          .realms-layout { display: flex; gap: 16px; align-items: flex-start; }
+          .realms-map-col { flex: 0 0 auto; width: min(440px, 50%); }
+          .realms-info-col { flex: 1; min-width: 0; }
+          @media (max-width: 768px) {
+            .realms-layout { flex-direction: column; }
+            .realms-map-col { width: 100%; }
           }
         `}</style>
 
@@ -1957,27 +2114,119 @@ export default function Portfolio() {
                       <div style={{ fontSize: "0.54rem", letterSpacing: "0.3em", color: T.textMuted, marginBottom: "5px" }}>[ TERRITORIES ]</div>
                       <h2 style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 800, fontSize: "1.5rem", color: T.textStrong, letterSpacing: "0.1em", marginBottom: "5px" }}>KNOWN <span style={{ color: T.accent }}>REALMS</span></h2>
                       <div style={{ height: 1, background: `linear-gradient(90deg,${T.accent},transparent)`, marginBottom: "20px", width: 180 }} />
-                      <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ paddingBottom: "54%", position: "relative", overflow: "hidden" }}>
-                        <div style={{ position: "absolute", inset: 0, background: lightMode ? "radial-gradient(ellipse at 50% 50%,rgba(200,215,230,0.5) 0%,rgba(218,226,236,0.97) 80%)" : "radial-gradient(ellipse at 50% 50%,rgba(0,30,40,.6) 0%,rgba(2,8,14,.97) 80%)" }} />
-                        <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${T.gridColor} 1px,transparent 1px),linear-gradient(90deg,${T.gridColor} 1px,transparent 1px)`, backgroundSize: "60px 60px" }} />
-                        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} viewBox="0 0 100 100" preserveAspectRatio="none">
-                          {["M20,32 Q35,26 50,20", "M50,20 Q62,29 74,38", "M20,32 Q26,48 33,65", "M33,65 Q49,66 65,68", "M74,38 Q69,53 65,68"].map((d, i) => <path key={i} d={d} stroke={`${T.accent}22`} strokeWidth="0.22" fill="none" strokeDasharray="1.5,1.5" />)}
-                        </svg>
-                        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "2.8rem", letterSpacing: "0.4em", color: `${T.accent}08`, pointerEvents: "none", whiteSpace: "nowrap", userSelect: "none" }}>THE REALMS</div>
-                        <div style={{ position: "absolute", bottom: 14, right: 18, fontFamily: "'Exo 2',sans-serif", fontSize: "0.52rem", color: T.textMuted, textAlign: "center", lineHeight: 1.7, letterSpacing: "0.1em" }}>N<br /><span style={{ fontSize: "0.85rem" }}>✦</span><br />S</div>
-                        <div style={{ position: "absolute", top: 11, left: 14, fontFamily: "'Exo 2',sans-serif", fontSize: "0.5rem", color: T.textMuted, letterSpacing: "0.1em" }}>[ MAP v1.0 · 5 REGIONS ]</div>
-                        {DATA.regions.map(r => <WorldRegion key={r.id} region={r} onClick={setSelRegion} rpgMode={true} accent={T.accent} />)}
-                      </SystemPanel>
-                      {selRegion ? (
-                        <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "14px 18px", marginTop: "14px", display: "flex", gap: "14px", alignItems: "center" }}>
-                          <div style={{ fontSize: "1.2rem" }}>🗺</div>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.8rem", color: T.accent, marginBottom: "3px", letterSpacing: "0.07em" }}>{selRegion.name}</div>
-                            <div style={{ fontSize: "0.68rem", color: T.textMuted, fontWeight: 300 }}>⚠ This realm has yet to be discovered. Return when the quest is ready, traveler.</div>
-                          </div>
-                          <button onClick={() => setSelRegion(null)} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: "1rem" }}>✕</button>
-                        </SystemPanel>
-                      ) : <div style={{ marginTop: "10px", fontSize: "0.57rem", color: T.textMuted, letterSpacing: "0.14em", textAlign: "center" }}>CLICK A NODE TO INSPECT REGION</div>}
+                      <div className="realms-layout">
+                        {/* LEFT: Map column */}
+                        <div className="realms-map-col">
+                          <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ aspectRatio: "210/297", position: "relative" }}>
+                            {/* Ref anchor for container measurements */}
+                            <div ref={mapContainerRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
+                            {/* Inner full-size transformable map */}
+                            <div
+                              ref={mapInnerRef}
+                              style={{ position: "absolute", top: 0, left: 0, width: "100%", paddingBottom: "141%", transform: `translate(${mapPan.x}px,${mapPan.y}px) scale(${mapScale})`, transformOrigin: "50% 0%", transition: mapDragging ? "none" : "transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)", cursor: mapDragging ? "grabbing" : "grab", userSelect: "none" }}
+                              onMouseDown={e => { setMapDragging(true); setMapDragStart({ x: e.clientX - mapPan.x, y: e.clientY - mapPan.y }); }}
+                              onMouseMove={e => {
+                                if (!mapDragging) return;
+                                const rawX = e.clientX - mapDragStart.x;
+                                const rawY = e.clientY - mapDragStart.y;
+                                const W = mapContainerRef.current?.clientWidth ?? 360;
+                                const H = mapContainerRef.current?.clientHeight ?? 509;
+                                const maxX = (mapScale - 1) * W / 2;
+                                const maxY = (mapScale - 1) * H;
+                                setMapPan({ x: Math.max(-maxX, Math.min(maxX, rawX)), y: Math.max(-maxY, Math.min(0, rawY)) });
+                              }}
+                              onMouseUp={() => setMapDragging(false)}
+                              onMouseLeave={() => setMapDragging(false)}
+                            >
+                              <div style={{ position: "absolute", inset: 0 }}>
+                                {/* Ocean background */}
+                                <div style={{ position: "absolute", inset: 0, background: lightMode ? "radial-gradient(ellipse at 40% 45%,rgba(100,160,210,0.4) 0%,rgba(205,220,235,0.97) 80%)" : "radial-gradient(ellipse at 40% 45%,rgba(0,30,50,0.85) 0%,rgba(2,8,14,0.99) 80%)" }} />
+                                {/* Philippines island fill — CSS mask using real SVG */}
+                                <div style={{ position: "absolute", inset: 0, background: T.accent, opacity: lightMode ? 0.18 : 0.13, WebkitMaskImage: `url(${import.meta.env.BASE_URL}ph-map.svg)`, maskImage: `url(${import.meta.env.BASE_URL}ph-map.svg)`, WebkitMaskSize: "100% 100%", maskSize: "100% 100%", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }} />
+                                {/* Philippines island glow — blurred mask layer */}
+                                <div style={{ position: "absolute", inset: 0, background: T.accent, opacity: lightMode ? 0.07 : 0.1, WebkitMaskImage: `url(${import.meta.env.BASE_URL}ph-map.svg)`, maskImage: `url(${import.meta.env.BASE_URL}ph-map.svg)`, WebkitMaskSize: "100% 100%", maskSize: "100% 100%", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", filter: "blur(5px)" }} />
+                                {/* Connection routes */}
+                                <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} viewBox="0 0 100 100" preserveAspectRatio="none">
+                                  {["M42,33 Q46,24 50,15", "M42,33 Q53,46 63,58", "M42,33 Q33,43 23,52", "M63,58 Q67,69 71,79", "M23,52 Q47,66 71,79"].map((d, i) => <path key={i} d={d} stroke={`${T.accent}25`} strokeWidth="0.35" fill="none" strokeDasharray="1.5,2" />)}
+                                </svg>
+                                {/* Watermark */}
+                                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: "'Oxanium',sans-serif", fontWeight: 900, fontSize: "2.8rem", letterSpacing: "0.4em", color: `${T.accent}06`, pointerEvents: "none", whiteSpace: "nowrap", userSelect: "none" }}>ARCHIPELAGO</div>
+                                {/* Compass */}
+                                <div style={{ position: "absolute", bottom: 14, right: 18, fontFamily: "'Exo 2',sans-serif", fontSize: "0.52rem", color: T.textMuted, textAlign: "center", lineHeight: 1.7, letterSpacing: "0.1em" }}>N<br /><span style={{ fontSize: "0.85rem" }}>✦</span><br />S</div>
+                                {DATA.regions.map(r => <WorldRegion key={r.id} region={r} onClick={handleSelectRegion} isSelected={selRegion?.id === r.id} mapScale={mapScale} rpgMode={true} accent={T.accent} gold={T.gold} />)}
+                              </div>
+                            </div>
+                            {/* Zoom controls */}
+                            <div style={{ position: "absolute", bottom: 12, right: 12, zIndex: 30, display: "flex", flexDirection: "column", gap: "4px" }}>
+                              {[
+                                { label: "+", action: () => setMapScale(s => Math.min(s + 0.25, 4)) },
+                                { label: "⌖", action: () => { setMapScale(1); setMapPan({ x: 0, y: 0 }); } },
+                                { label: "−", action: () => setMapScale(s => Math.max(s - 0.25, 1)) },
+                              ].map(({ label, action }) => (
+                                <div key={label} onClick={action} style={{ width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.75rem", color: T.accent, background: lightMode ? "rgba(232,228,242,0.92)" : "rgba(6,14,26,0.92)", border: `1px solid ${T.accent}44`, borderRadius: "3px", cursor: "pointer", userSelect: "none" }}>{label}</div>
+                              ))}
+                            </div>
+                            {/* Scale indicator */}
+                            <div style={{ position: "absolute", bottom: 16, left: 14, zIndex: 30, fontFamily: "'Exo 2',sans-serif", fontSize: "0.42rem", color: T.textMuted, letterSpacing: "0.1em" }}>{Math.round(mapScale * 100)}%</div>
+                          </SystemPanel>
+                        </div>
+
+                        {/* RIGHT: Info column */}
+                        <div className="realms-info-col">
+                          {selRegion ? (
+                            <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "20px 18px" }}>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                                <div style={{ fontSize: "0.44rem", letterSpacing: "0.2em", color: T.textMuted }}>[ REGION INTEL ]</div>
+                                <button onClick={() => setSelRegion(null)} style={{ background: "none", border: "none", color: T.textMuted, cursor: "pointer", fontSize: "1rem", lineHeight: 1, padding: 0 }}>✕</button>
+                              </div>
+                              <div style={{ fontSize: "1.2rem", marginBottom: "10px" }}>🗺</div>
+                              <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "1rem", color: T.accent, marginBottom: "8px", letterSpacing: "0.07em" }}>{selRegion.name}</div>
+                              <div style={{ fontSize: "0.72rem", color: T.text, lineHeight: 1.7, marginBottom: "16px" }}>{selRegion.desc}</div>
+                              {!selRegion.url && (
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: T.textMuted }} />
+                                  <span style={{ fontSize: "0.52rem", color: T.textMuted, letterSpacing: "0.12em", fontWeight: 600 }}>⚠ UNDISCOVERED</span>
+                                </div>
+                              )}
+                              {selRegion.url && (
+                                <div onClick={() => setPortalTarget(selRegion)}
+                                  style={{ display: "inline-block", fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.62rem", letterSpacing: "0.18em", color: lightMode ? "#fff" : "#060c16", background: T.accent, border: `1px solid ${T.accent}`, borderRadius: "3px", padding: "9px 18px", cursor: "pointer", textTransform: "uppercase", boxShadow: `0 0 18px ${T.accent}55` }}>
+                                  [ ENTER THE REALM ]
+                                </div>
+                              )}
+                            </SystemPanel>
+                          ) : (
+                            <SystemPanel glowColor={T.accent} lightMode={lightMode} style={{ padding: "18px 16px" }}>
+                              <div style={{ fontSize: "0.44rem", letterSpacing: "0.2em", color: T.textMuted, marginBottom: "4px" }}>[ REALM INDEX ]</div>
+                              <div style={{ fontSize: "0.54rem", color: T.textMuted, marginBottom: "14px", letterSpacing: "0.1em" }}>
+                                {DATA.regions.filter(r => r.url).length}/{DATA.regions.length} REALMS UNLOCKED
+                              </div>
+                              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                                {DATA.regions.map(r => (
+                                  <div key={r.id}
+                                    onClick={() => handleSelectRegion(r)}
+                                    style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 12px", background: `${T.accent}06`, border: `1px solid ${T.accent}14`, borderRadius: "3px", cursor: "pointer", transition: "background 0.15s, border-color 0.15s" }}
+                                    onMouseEnter={e => { e.currentTarget.style.background = `${T.accent}12`; e.currentTarget.style.borderColor = `${T.accent}30`; }}
+                                    onMouseLeave={e => { e.currentTarget.style.background = `${T.accent}06`; e.currentTarget.style.borderColor = `${T.accent}14`; }}
+                                  >
+                                    <span style={{ color: T.gold, fontSize: "0.7rem", flexShrink: 0 }}>◆</span>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                      <div style={{ fontFamily: "'Oxanium',sans-serif", fontWeight: 700, fontSize: "0.68rem", color: T.textStrong, letterSpacing: "0.05em" }}>{r.name}</div>
+                                      <div style={{ fontSize: "0.52rem", color: T.textMuted, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.desc}</div>
+                                    </div>
+                                    <span style={{ fontSize: "0.42rem", color: r.url ? "#22c55e" : T.textMuted, letterSpacing: "0.1em", flexShrink: 0, fontWeight: 600 }}>
+                                      {r.url ? "UNLOCKED" : "LOCKED"}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                              <div style={{ marginTop: "14px", fontSize: "0.46rem", color: T.textMuted, letterSpacing: "0.12em", textAlign: "center" }}>
+                                CLICK A NODE ON THE MAP OR A REALM ABOVE
+                              </div>
+                            </SystemPanel>
+                          )}
+                        </div>
+                      </div>
                     </>
                   ) : (
                     <CVSection title="Projects" light={lightMode} accent={T.accent}>
@@ -1986,11 +2235,14 @@ export default function Portfolio() {
                           <div key={i} style={{ background: T.cardBg, border: `1px solid ${T.cardBorder}`, borderRadius: "8px", padding: "20px", boxShadow: lightMode ? "0 1px 6px rgba(0,0,0,0.05)" : "none", position: "relative", overflow: "hidden" }}>
                             <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: `linear-gradient(90deg,${T.accent},transparent)` }} />
                             <div style={{ fontFamily: T.titleFont, fontWeight: 600, fontSize: "0.88rem", color: T.textStrong, marginBottom: "6px" }}>{r.cvName}</div>
-                            <div style={{ fontSize: "0.75rem", color: T.textMuted, lineHeight: 1.6, marginBottom: "14px" }}>{r.desc}</div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                              <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.gold }} />
-                              <span style={{ fontSize: "0.62rem", color: T.textMuted, fontWeight: 500 }}>Coming Soon</span>
-                            </div>
+                            <div style={{ fontSize: "0.75rem", color: T.textMuted, lineHeight: 1.6, marginBottom: "14px" }}>{r.cvDesc || r.desc}</div>
+                            {r.url
+                              ? <div onClick={() => setPortalTarget(r)} style={{ color: T.accent, fontWeight: 600, fontSize: "0.75rem", cursor: "pointer" }}>Visit Project →</div>
+                              : <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: T.gold }} />
+                                  <span style={{ fontSize: "0.62rem", color: T.textMuted, fontWeight: 500 }}>Coming Soon</span>
+                                </div>
+                            }
                           </div>
                         ))}
                       </div>
