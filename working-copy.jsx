@@ -124,7 +124,7 @@ const DATA = {
     },
   ],
   regions: [
-    { id: 1, name: "The Arcane Forge", cvName: "Tools & Utilities", desc: "A crafting & developer tools project", x: 42, y: 33 },
+    { id: 1, name: "The Balance Forge", cvName: "Balance Sheet Creator", desc: "An accounting tool project", x: 42, y: 33, url: "https://balanceforge.netlify.app" },
     { id: 2, name: "The Iron Guild", cvName: "Enterprise Portal", desc: "Enterprise solutions portal", x: 50, y: 15 },
     { id: 3, name: "The Ember Sanctum", cvName: "Creative Lab", desc: "Creative experiments and prototypes", x: 63, y: 58 },
     { id: 4, name: "The Shadow Market", cvName: "Personal Finance Tracker", desc: "A ledger of shadows — track coin flows, manage your vault, and command a configurable realm of personal wealth.", cvDesc: "Full-stack personal finance app built with React, .NET Core & Supabase. Features a configurable dashboard, account management, and transaction history.", x: 71, y: 79, url: "https://perfintrackerwin.netlify.app" },
