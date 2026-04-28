@@ -234,3 +234,8 @@ Added below the dual spider charts to fill blank space on large screens. Two blo
 - **Deploy**: `npm run build` → commit + push `dist/` (or configure GitHub Actions)
 - **Formspree**: `https://formspree.io/f/xjgawygo` (live, real endpoint)
 - **Profile images**: `public/profile.png` (Classic mode) + `public/profile_rpg.png` (IMMERSIVE mode); `src` is conditional on `rpgMode` at both avatar spots (~lines 1419, 1578)
+
+---
+
+## 13. Applied Learning
+When something fails repeatedly, when Erwin has to re-explain, or when a workaround is found for a platform/tool limitation, add a one-line bullet here. Keep each bullet under 15 words. No explanations. Only add things that will save time in future sessions.
