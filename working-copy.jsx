@@ -1243,7 +1243,7 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgawygo";
 // ─── MAIN ─────────────────────────────────────────────────────────────────
 export default function Portfolio() {
   const [loading, setLoading] = useState(true);
-  const [rpgMode, setRpgMode] = useState(true);
+  const [rpgMode, setRpgMode] = useState(false);
   const [lightMode, setLightMode] = useState(false);
   const [glitching, setGlitching] = useState(false);
   const [transitionIsDark, setTransitionIsDark] = useState(true);
